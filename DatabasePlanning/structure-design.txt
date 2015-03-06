@@ -1,4 +1,36 @@
 # Use this document for planning database structure
 
+Syntax
+=============
+	> Database names should be in all capital letters, with spaces as underscores. (i.e. TEST_DATABASE)
+	> Tables should begin with a capital letter
+
+Tables
+=============
+
+	USERS
+		u_id				int(6)				primary key
+		fname				varchar(30)
+		lname				varchar(30)
+		email				varchar(40)
+		username			varchar(20)	
+		password			varchar(200)	
+		school/company		varchar(40)		
+		admin				boolean			-----> move to users_groups, b/c admin is related to each group user is in
+
+	GROUPS
+		G_id				int(6)				primary key
+		U_createdBy 		int(6)								// U_id of the creator
+		G_name				varchar(40)
+		G_description		varchar(400)						// Short description of the group
+
+	USER_GROUP
+		U_id				int(6)				primary key		// Each row is unique to 1 User-Group pairing
+		G_id				int(6)				primary key
+		UG_admin			boolean								// Admin priveledge for this user in this group
+		UG_dateJoined		date								
+		
+
+	EVENTS
 
 
