@@ -5,32 +5,76 @@ Syntax
 	> Database names should be in all capital letters, with spaces as underscores. (i.e. TEST_DATABASE)
 	> Tables should begin with a capital letter
 
-Tables
-=============
+USER_DATA
+=========
 
-	USERS
-		u_id				int(6)				primary key
-		fname				varchar(30)
-		lname				varchar(30)
-		email				varchar(40)
-		username			varchar(20)	
-		password			varchar(200)	
-		school/company		varchar(40)		
-		admin				boolean			-----> move to users_groups, b/c admin is related to each group user is in
+	Users
+		U_id					int(11)				primary key
+		U_fname					varchar(30)
+		U_lname					varchar(30)
+		U_email					varchar(40)
+		U_username				varchar(20)	
+		U_password				varchar(200)	
+		U_school/company		varchar(60)		
 
-	GROUPS
-		G_id				int(6)				primary key
-		U_createdBy 		int(6)								// U_id of the creator
+	Groups
+		G_id				int(11)				primary key
+		U_createdBy 		int(11)								// U_id of the creator
 		G_name				varchar(40)
 		G_description		varchar(400)						// Short description of the group
 
-	USER_GROUP
-		U_id				int(6)				primary key		// Each row is unique to 1 User-Group pairing
-		G_id				int(6)				primary key
+	User_Group
+		U_id				int(11)				primary key		// Each row is unique to 1 User-Group pairing
+		G_id				int(11)				primary key
 		UG_admin			boolean								// Admin priveledge for this user in this group
 		UG_dateJoined		date								
 		
+CONTENT_DATA
+============
 
-	EVENTS
+	Events
+		E_id				int(11)				primary key
+		E_creator			int(11)								// The U_id of the user who created it
+		E_title				var
+		E_location			varchar(100)
+		E_lat
+		E_long
+
+	Events_Users
+		U_id
+		E_id		
+		EU_status												// Enum of { Going, Maybe, Not Going, Invited, Not Invited }
+
+
+	Tasks
+		T_id
+		T_name
+		T_description
+		T_priority			Enum				{Low, Normal, High, Extreme}
+		T_deadline
+
+	Tasks_Users
+		T_id
+		U_id
+
+	Activity
+		A_id
+		T_id 			// Task this activity is for
+		U_id 			// User who completed the task
+		A_time			// Time spent on the activity
+		A_verified		// is the activity verified?
+		A_verifiedBy	// id of who verified the activity
+
+	
+
+
+
+
+
+
+
+
+
+
 
 
