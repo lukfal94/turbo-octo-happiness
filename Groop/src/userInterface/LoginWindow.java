@@ -12,10 +12,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import databaseComm.Registrar;
+
 //
 //	This is the user interface for the Login/Register Sequence
 //
 public class LoginWindow extends JFrame{
+	private Registrar registrar;
+	
 	private JPanel loginPanel;
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
