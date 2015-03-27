@@ -1,4 +1,3 @@
-package taskManager;
 package social;
 
 import java.util.List;
