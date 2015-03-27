@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import social.User;
 import databaseComm.Registrar;
 
 //
@@ -24,7 +25,7 @@ public class LoginWindow extends JFrame{
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JTextField usernameTextField;
-	private JTextField passwordTextField;
+	private JPasswordField passwordTextField;
 	private JButton loginButton;
 	
 	private GridBagLayout gbLayout;
@@ -36,6 +37,8 @@ public class LoginWindow extends JFrame{
 	}
 	
 	private void initComponents() {
+		registrar = new Registrar();
+		
 		this.setTitle("Login or Sign Up");
 		
 		this.setSize(300, 400);
@@ -59,7 +62,7 @@ public class LoginWindow extends JFrame{
 		usernameTextField = new JTextField();
 		usernameTextField.setPreferredSize(new Dimension(100, 20));
 		
-		passwordTextField = new JTextField();
+		passwordTextField = new JPasswordField(20);
 		passwordTextField.setPreferredSize(new Dimension(100, 20));
 		
 		loginButton = new JButton("Login/Register");
@@ -87,17 +90,25 @@ public class LoginWindow extends JFrame{
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(e);
+//			System.out.println(usernameTextField.getText());
+//			System.out.println(passwordTextField.getPassword());
+			User test = registrar.getUserByID(1);
+			test.printUserInfo();
+//			try{
+//				registrar.login(usernameTextField.getText(), (passwordTextField.getPassword()).toString());
+//			} catch(Exception ex) {
+//				System.out.println(ex);
+//			}
 		}
 	}
 	
-	private void addComponent(int x, int y, int w, int h, GridBagConstraints c, Container aContainer, Component aComponent )  
-	{  
-	    c.gridx = x;  
-	    c.gridy = y;  
-	    c.gridwidth = w;  
-	    c.gridheight = h;  
-	    gbLayout.setConstraints( aComponent, c );  
-	    aContainer.add( aComponent );  
-	} 
+//	private void addComponent(int x, int y, int w, int h, GridBagConstraints c, Container aContainer, Component aComponent )  
+//	{  
+//	    c.gridx = x;  
+//	    c.gridy = y;  
+//	    c.gridwidth = w;  
+//	    c.gridheight = h;  
+//	    gbLayout.setConstraints( aComponent, c );  
+//	    aContainer.add( aComponent );  
+//	} 
 }
