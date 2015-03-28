@@ -3,16 +3,21 @@ package social;
 import java.util.List;
 
 public class TaskManager{
-	private Task[] tasks;
+	private Task task;
 	private ActivityManager activity;
 	
-	public Task createTask(String, String, Deadline){
+	public Task createTask(String title, String description, Deadline deadline){
+		task = new Task();
+		task.setTitle(title);
+		task.setDescription(description);
+		task.setDeadline( deadline);
 		
-		return Task;
+		return task;
 	}
 	
-	public void deleteTask(){
+	public void deleteTask(Task task){
 		
+		task = null;
 	}
 	
 }
