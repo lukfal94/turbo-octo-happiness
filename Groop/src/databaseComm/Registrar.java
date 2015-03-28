@@ -18,29 +18,35 @@ public class Registrar {
 	public Registrar() {
 		mapper = new ObjectMapper();
 	}
-	public User login(String username, String pwd) throws JsonParseException, JsonMappingException, IOException{
+	public User login(String username, String pwd) 
+			throws JsonParseException, JsonMappingException, IOException{
 		User user = null;
-		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/login.php?id=" 
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/login.php?username=" 
 				+ username + "&password=" + pwd);
+		user = mapper.readValue(jsonUrl, User.class);
+		return user;
+	}
+	
+	public User registerUser(String username, String firstname, String lastname,
+			String email, String organization, String phonenumber, String password) 
+			throws JsonParseException, JsonMappingException, IOException {
+		User user = null;
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/register.php?" +
+				"username=" + username + "&firstname=" + firstname +
+				"&lastname=" + lastname + "&email=" + email + "&organization=" + organization +
+				"&phonenumber=" + phonenumber + "&password=" + password);
 		user = mapper.readValue(jsonUrl, User.class);
 		
 		return user;
 	}
-
-	public User getUserByID(int id) {
+	public User getUserByID(int id) throws JsonParseException, JsonMappingException, IOException {
 		// TODO Auto-generated method stub
 		User usr = null;
 		URL jsonUrl = null;
-		try {
-			jsonUrl = new URL("http://www.lukefallon.com/groop/api/users.php?id=" + id);
-		} catch(Exception ex) {
-			System.out.println(ex);
-		}
-		try {
-			usr = mapper.readValue(jsonUrl, User.class);
-		} catch(Exception ex) {
-			System.out.println(ex);
-		}
+		
+		jsonUrl = new URL("http://www.lukefallon.com/groop/api/users.php?id=" + id);
+		usr = mapper.readValue(jsonUrl, User.class);
+		
 		return usr;
 	}
 }

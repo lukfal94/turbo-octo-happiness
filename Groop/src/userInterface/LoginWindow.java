@@ -9,8 +9,11 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.*;
+
+import com.fasterxml.jackson.core.JsonParseException;
 
 import social.User;
 import databaseComm.Registrar;
@@ -24,6 +27,7 @@ public class LoginWindow extends JFrame{
 	private JPanel loginPanel;
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
+	private JLabel msgLabel;
 	private JTextField usernameTextField;
 	private JPasswordField passwordTextField;
 	private JButton loginButton;
@@ -57,6 +61,8 @@ public class LoginWindow extends JFrame{
 		loginPanel = new JPanel();
 		loginPanel.setLayout(gLayout);
 		
+		msgLabel = new JLabel();
+		
 		usernameLabel = new JLabel("Username");
 		passwordLabel = new JLabel("Password");
 		usernameTextField = new JTextField();
@@ -80,6 +86,7 @@ public class LoginWindow extends JFrame{
 		loginPanel.add(passwordLabel);
 		loginPanel.add(passwordTextField);
 		loginPanel.add(loginButton);
+		loginPanel.add(msgLabel);
 		
 		this.add(loginPanel);
 		
@@ -87,18 +94,24 @@ public class LoginWindow extends JFrame{
 	}
 	
 	private class LoginButtonPress implements ActionListener {
-		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-//			System.out.println(usernameTextField.getText());
-//			System.out.println(passwordTextField.getPassword());
-			User test = registrar.getUserByID(1);
-			test.printUserInfo();
-//			try{
-//				registrar.login(usernameTextField.getText(), (passwordTextField.getPassword()).toString());
-//			} catch(Exception ex) {
-//				System.out.println(ex);
-//			}
+			User currUser = null;
+			try{
+				currUser = registrar.login(usernameTextField.getText(), passwordTextField.getPassword().toString());
+			} catch(JsonParseException jpEx) {
+				// If there's a parse error, this is not the correct password
+				System.out.println("Incorrect Username or Password");
+				msgLabel.setText("Incorrect Username or Password");
+				passwordTextField.setText("");
+				return;
+			} catch(IOException ioEx) {
+				
+			}
+			if(currUser == null) {
+				RegisterWindow registerWindow = new RegisterWindow(usernameTextField.getText());
+				
+			}
 		}
 	}
 	
