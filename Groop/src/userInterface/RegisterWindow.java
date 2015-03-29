@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -19,8 +21,11 @@ import javax.swing.JTextField;
 import social.User;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import databaseComm.Registrar;
+import databaseComm.ServerResponse;
 
 public class RegisterWindow extends JFrame{
 	/* User Info:
@@ -132,25 +137,77 @@ public class RegisterWindow extends JFrame{
 	}
 	
 	private class RegisterButtonPress implements ActionListener {
+		private ObjectMapper obMap = new ObjectMapper();
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
-			if(confirmPassword()) {
-				Registrar reg = new Registrar();
-				try {
-				reg.registerUser(usernameTextField.getText(), firstnameTextField.getText(),
-						lastnameTextField.getText(), emailTextField.getText(), 
-						organizationTextField.getText(), phonenumberTextField.getText(), 
-						String.valueOf(passwordTextField.getPassword()));
-				} catch(Exception ex) {
-					System.out.println(ex);
-				}
+			boolean usernameAvailable = false;
+			boolean emailAvailable = false;
+			
+			try {
+				usernameAvailable = isUsernameAvailable(usernameTextField.getText());
+				emailAvailable = isEmailAvailable(emailTextField.getText());
+			} catch(Exception ex) {
+				msgLabel.setText("Fatal Error: " + ex);
+				return;
 			}
-			else {
-				msgLabel.setText("Passwords do not match");
+			
+			// Can only register if both the username and email are available
+			if(usernameAvailable && emailAvailable) {
+				// Check that the passwords match
+				if(confirmPassword()) {
+					Registrar reg = new Registrar();
+					try {
+						reg.registerUser(
+							usernameTextField.getText(), 
+							firstnameTextField.getText(),
+							lastnameTextField.getText(), 
+							emailTextField.getText(), 
+							organizationTextField.getText(), 
+							phonenumberTextField.getText(), 
+							String.valueOf(passwordTextField.getPassword())
+							);
+					} catch(Exception ex) {
+						System.out.println(ex);
+					}
+				} else {
+					msgLabel.setText("Passwords do not match");
+					passwordTextField.setText("");
+					confirmPasswordTextField.setText("");
+				}
+			} else if(!usernameAvailable) {
+				msgLabel.setText("This username is taken.");
+				usernameTextField.setText("");
+				passwordTextField.setText("");
+				confirmPasswordTextField.setText("");
+			} else {
+				msgLabel.setText("This email is in use.");
+				emailTextField.setText("");
 				passwordTextField.setText("");
 				confirmPasswordTextField.setText("");
 			}
+	}
+
+		private boolean isUsernameAvailable(String username) 
+			throws JsonParseException, JsonMappingException, IOException {
+			// TODO Auto-generated method stub
+			ServerResponse response = null;
+			URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/valid.php?username="+username);
+			
+			response = obMap.readValue(jsonUrl, ServerResponse.class);
+			
+			return response.isBoolResponse();
+		}
+		
+		private boolean isEmailAvailable(String email) 
+			throws JsonParseException, JsonMappingException, IOException {
+			// TODO Auto-generated method stub
+			ServerResponse response = null;
+			URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/valid.php?email="+email);
+			
+			response = obMap.readValue(jsonUrl, ServerResponse.class);
+			
+			return response.isBoolResponse();
 		}
 
 		private boolean confirmPassword() {

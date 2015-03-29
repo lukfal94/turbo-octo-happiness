@@ -110,7 +110,9 @@ public class LoginWindow extends JFrame{
 			}
 			if(currUser == null) {
 				RegisterWindow registerWindow = new RegisterWindow(usernameTextField.getText());
-				
+			} else {
+				GroopMainInterface mainGUI = new GroopMainInterface(currUser);
+				LoginWindow.this.dispose();
 			}
 		}
 	}

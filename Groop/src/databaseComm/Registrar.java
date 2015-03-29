@@ -35,6 +35,7 @@ public class Registrar {
 				"username=" + username + "&firstname=" + firstname +
 				"&lastname=" + lastname + "&email=" + email + "&organization=" + organization +
 				"&phonenumber=" + phonenumber + "&password=" + password);
+		System.out.println(jsonUrl.toString());
 		user = mapper.readValue(jsonUrl, User.class);
 		
 		return user;
