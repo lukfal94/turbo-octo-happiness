@@ -9,7 +9,7 @@ public class ServerResponse {
 	private ServerErrorMessage[] errMsgs = ServerErrorMessage.values();
 	
 	public enum ServerErrorMessage {
-		NO_ERROR, DATABASE_CONN, USER_TAKEN, INCORRECT_PASSWORD, USER_NOT_FOUND
+		NO_ERROR, DATABASE_CONN, USER_TAKEN, INCORRECT_PASSWORD, USER_NOT_FOUND, EMAIL_TAKEN
 	}
 	
 	public int getErrorCode() {
@@ -22,7 +22,6 @@ public class ServerResponse {
 	public ServerErrorMessage getServerErrorMessage() {
 		// TODO Auto-generated method stub
 		setErrMsg(errorCode);
-		System.out.println("ServerErrorMessage " + errMsg);
 		return errMsg;
 	}
 	

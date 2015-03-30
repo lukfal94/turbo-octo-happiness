@@ -59,6 +59,8 @@ public class RegisterWindow extends JFrame{
 	
 	public RegisterWindow(String username, LoginWindow caller) {
 		this.loginWindow = caller;
+		caller.setEnabled(false);
+		
 		initComponents(username);
 	}
 	
@@ -135,23 +137,15 @@ public class RegisterWindow extends JFrame{
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			boolean usernameAvailable = false;
-			boolean emailAvailable = false;
+			Object registrarResponse = null;
+			Registrar reg = new Registrar();
 			
-			try {
-				usernameAvailable = isUsernameAvailable(usernameTextField.getText());
-				emailAvailable = isEmailAvailable(emailTextField.getText());
-			} catch(Exception ex) {
-				msgLabel.setText("Fatal Error: " + ex);
-				return;
-			}
-			
-			// Can only register if both the username and email are available
-			if(usernameAvailable && emailAvailable) {
-				// Check that the passwords match
-				if(confirmPassword()) {
-					Registrar reg = new Registrar();
-					try {
+			// Confirm Passwords Match
+			if(confirmPassword()){
+				
+				// Try to register the user
+				try {
+					registrarResponse = 
 						reg.registerUser(
 							usernameTextField.getText(), 
 							firstnameTextField.getText(),
@@ -160,48 +154,47 @@ public class RegisterWindow extends JFrame{
 							organizationTextField.getText(), 
 							phonenumberTextField.getText(), 
 							String.valueOf(passwordTextField.getPassword())
-							);
-					} catch(Exception ex) {
-						System.out.println(ex);
-					}
-				} else {
-					msgLabel.setText("Passwords do not match");
-					passwordTextField.setText("");
-					confirmPasswordTextField.setText("");
+						);
+				} catch(Exception ex) {
+					System.out.println(ex);
 				}
-			} else if(!usernameAvailable) {
-				msgLabel.setText("This username is taken.");
-				usernameTextField.setText("");
-				passwordTextField.setText("");
-				confirmPasswordTextField.setText("");
-			} else {
-				msgLabel.setText("This email is in use.");
-				emailTextField.setText("");
+				
+				if(registrarResponse == null) System.out.println("Uh oh");
+				// reg.registerUser returns User.class on successful registration
+				if(registrarResponse.getClass().equals(User.class)) {
+					
+					// Launch the main GUI with current user
+					GroopMainInterface mainGUI = new GroopMainInterface((User) registrarResponse);
+					
+					// Dispose of the login and register windows
+					RegisterWindow.this.loginWindow.dispose();
+					RegisterWindow.this.dispose();
+				}
+				// reg.registerUser returns a ServerResponse.class if an error occured
+				else if(registrarResponse.getClass().equals(ServerResponse.class)) {
+					ServerResponse serverResponse = (ServerResponse) registrarResponse;
+					
+					if(serverResponse.getServerErrorMessage() == ServerErrorMessage.USER_TAKEN) {
+						msgLabel.setText("Sorry, this username is taken.");
+						usernameTextField.setText("");
+					}
+					else if(serverResponse.getServerErrorMessage() == ServerErrorMessage.EMAIL_TAKEN) {
+						msgLabel.setText("This email is already in use.");
+						emailTextField.setText("");
+					}
+					else if(serverResponse.getServerErrorMessage() == ServerErrorMessage.DATABASE_CONN) {
+						msgLabel.setText("Error connecting to database. Try again.");
+					}
+					else {
+						msgLabel.setText("Unspecified error. Try again.");
+					}
+				}
+			}
+			else {
+				msgLabel.setText("Passwords much match!");
 				passwordTextField.setText("");
 				confirmPasswordTextField.setText("");
 			}
-	}
-
-		private boolean isUsernameAvailable(String username) 
-			throws JsonParseException, JsonMappingException, IOException {
-			// TODO Auto-generated method stub
-			ServerResponse response = null;
-			URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/valid.php?username="+username);
-			
-			response = obMap.readValue(jsonUrl, ServerResponse.class);
-			
-			return response.getServerErrorMessage() == ServerErrorMessage.NO_ERROR;
-		}
-		
-		private boolean isEmailAvailable(String email) 
-			throws JsonParseException, JsonMappingException, IOException {
-			// TODO Auto-generated method stub
-			ServerResponse response = null;
-			URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/valid.php?email="+email);
-			
-			response = obMap.readValue(jsonUrl, ServerResponse.class);
-			
-			return response.getServerErrorMessage() == ServerErrorMessage.NO_ERROR;
 		}
 
 		private boolean confirmPassword() {

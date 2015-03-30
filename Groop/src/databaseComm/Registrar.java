@@ -27,7 +27,7 @@ public class Registrar {
 		ServerResponse response = null;
 		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/login.php?username=" 
 				+ username + "&password=" + pwd);
-		System.out.println(jsonUrl.toString());
+
 		try {
 			user = mapper.readValue(jsonUrl, User.class);
 			return user;
@@ -46,7 +46,7 @@ public class Registrar {
 				"username=" + username + "&firstname=" + firstname +
 				"&lastname=" + lastname + "&email=" + email + "&organization=" + organization +
 				"&phonenumber=" + phonenumber + "&password=" + password);
-		System.out.println(jsonUrl.toString());
+
 		try {
 			user = mapper.readValue(jsonUrl, User.class);
 			return user;
