@@ -17,6 +17,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 import social.User;
 import databaseComm.Registrar;
+import databaseComm.ServerResponse;
+import databaseComm.ServerResponse.ServerErrorMessage;
 
 //
 //	This is the user interface for the Login/Register Sequence
@@ -96,23 +98,40 @@ public class LoginWindow extends JFrame{
 	private class LoginButtonPress implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			User currUser = null;
-			try{
-				currUser = registrar.login(usernameTextField.getText(), passwordTextField.getPassword().toString());
-			} catch(JsonParseException jpEx) {
-				// If there's a parse error, this is not the correct password
-				System.out.println("Incorrect Username or Password");
-				msgLabel.setText("Incorrect Username or Password");
-				passwordTextField.setText("");
+			Object registrarResponse = null;
+			ServerResponse serverResponse= null;
+			
+			try {
+				registrarResponse = registrar.login(usernameTextField.getText(), String.valueOf(passwordTextField.getPassword()));
+			} catch(Exception ex) {
+				System.out.println(">>" + ex);
 				return;
-			} catch(IOException ioEx) {
-				
 			}
-			if(currUser == null) {
-				RegisterWindow registerWindow = new RegisterWindow(usernameTextField.getText());
-			} else {
-				GroopMainInterface mainGUI = new GroopMainInterface(currUser);
-				LoginWindow.this.dispose();
+			
+			// Registrar.login() returns either a User.class or ServerResponse.class
+			//
+			if(registrarResponse.getClass().equals(ServerResponse.class)) {
+				serverResponse = (ServerResponse) registrarResponse;
+				
+				// Username or Password is incorrect, reset password field
+				if(serverResponse.getServerErrorMessage() == ServerErrorMessage.INCORRECT_PASSWORD) {
+					msgLabel.setText("Incorrect Username or Password");
+					passwordTextField.setText("");
+					return;
+				} 
+				// Could not connect to database
+				else if (serverResponse.getServerErrorMessage() == ServerErrorMessage.DATABASE_CONN) {
+					msgLabel.setText("Failed to connect to server");
+					return;
+				} 
+				// Username does not exist in database, launch a window to register.
+				else if (serverResponse.getServerErrorMessage() == ServerErrorMessage.USER_NOT_FOUND) {
+					RegisterWindow registerWindow = new RegisterWindow(usernameTextField.getText(), LoginWindow.this);
+				}
+			}
+			else if(registrarResponse.getClass().equals(User.class)) {
+				GroopMainInterface mainGUI = new GroopMainInterface((User) registrarResponse);
+				LoginWindow.this.dispose();	
 			}
 		}
 	}

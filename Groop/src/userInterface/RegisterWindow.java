@@ -26,18 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import databaseComm.Registrar;
 import databaseComm.ServerResponse;
+import databaseComm.ServerResponse.ServerErrorMessage;
 
 public class RegisterWindow extends JFrame{
-	/* User Info:
-	 * username
-	 * firstname
-	 * lastname
-	 * email
-	 * organization
-	 * phonenumber
-	 * password
-	 * confirmPassword 
-	 */
+	private LoginWindow loginWindow;
+	
 	private JPanel registerPanel;
 	
 	private JLabel usernameLabel;
@@ -64,7 +57,8 @@ public class RegisterWindow extends JFrame{
 	private GridLayout gLayout;
 	private GridBagLayout gbLayout;
 	
-	public RegisterWindow(String username) {
+	public RegisterWindow(String username, LoginWindow caller) {
+		this.loginWindow = caller;
 		initComponents(username);
 	}
 	
@@ -196,7 +190,7 @@ public class RegisterWindow extends JFrame{
 			
 			response = obMap.readValue(jsonUrl, ServerResponse.class);
 			
-			return response.isBoolResponse();
+			return response.getServerErrorMessage() == ServerErrorMessage.NO_ERROR;
 		}
 		
 		private boolean isEmailAvailable(String email) 
@@ -207,7 +201,7 @@ public class RegisterWindow extends JFrame{
 			
 			response = obMap.readValue(jsonUrl, ServerResponse.class);
 			
-			return response.isBoolResponse();
+			return response.getServerErrorMessage() == ServerErrorMessage.NO_ERROR;
 		}
 
 		private boolean confirmPassword() {
