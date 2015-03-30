@@ -15,6 +15,7 @@ USER_DATA
 		U_email					varchar(40)
 		U_username				varchar(20)	
 		U_password				varchar(200)	
+		U_salt					varchar(200)
 		U_school/company		varchar(60)		
 
 	Groups
