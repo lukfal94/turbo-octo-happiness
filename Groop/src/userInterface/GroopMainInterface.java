@@ -8,15 +8,17 @@ import javax.swing.JFrame;
 import social.User;
 
 public class GroopMainInterface extends JFrame{
+	User activeUser;
 	
 	public GroopMainInterface(User user) {
+		activeUser = user;
 		initComponents();
 	}
 	
 	private void initComponents() {
-		this.setTitle("Groop");
+		this.setTitle("Groop - " + activeUser.getUsername());
 
-		this.setSize(600, 800);
+		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// Center the frame in the screen
