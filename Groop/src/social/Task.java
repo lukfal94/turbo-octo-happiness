@@ -7,8 +7,20 @@ public class Task{
 	private String title;
 	private String description;
 	private Deadline deadline;
-	private User[] assignedTo;
+	private ArrayList<User> assignedTo;
 	private boolean complete;
+	
+	// constructor
+	public Task(){
+		
+		id = 0;
+		title = "";
+		description = "";
+		deadline = new Deadline();
+		assignedTo = new ArrayList<User>();
+		complete = false;
+		
+	}
 	
 	public void setId(int id){
 		this.id = id;
@@ -42,15 +54,23 @@ public class Task{
 		this.deadline = deadline;
 	}
 	
-	public deadline getDeadline(){
+	public Deadline getDeadline(){
 		return  deadline;
 	}
 	
-	public void setAssignedTo(int User[] assignedTo){
-		this.assignedTo = assignedTo;
+	public void createNewAssignedTo(){
+		this.assignedTo = new ArrayList<User>;
 	}
 	
-	public User[] AssignedTo(){
+	public void addToAssignedTo(User user){
+		this.assignedTo.add(user);
+	}
+	
+	public void removeFromAssignedTo(User user){
+		//This needs to be setup
+	}
+	
+	public ArrayList<User> getAssignedTo(){
 		return  assignedTo;
 	}
 	
