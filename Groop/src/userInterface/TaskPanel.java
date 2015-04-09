@@ -72,21 +72,6 @@ public class TaskPanel extends JPanel{
 			TaskWindow taskWindow = new TaskWindow(mode);
 		}
 	}
-	public User getActiveUser() {
-		return activeUser;
-	}
-
-	public void setActiveUser(User activeUser) {
-		this.activeUser = activeUser;
-	}
-
-	public Group getActiveGroup() {
-		return activeGroup;
-	}
-
-	public void setActiveGroup(Group activeGroup) {
-		this.activeGroup = activeGroup;
-	}
 
 	private class TaskWindow extends JFrame {
 		private JPanel taskWindowPanel;

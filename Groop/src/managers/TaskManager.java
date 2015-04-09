@@ -25,13 +25,13 @@ public class TaskManager{
 	}
 	
 	public void createTasks(int numTasks){
-		for(int i = 0; i < numTasks){
+		for(int i = 0; i < tasks.size(); i++){
 			this.tasks.add(createTask("","",null));
 		}
 	}
 	
 	public ArrayList<Task> getTasks(){
-		return this.tasks
+		return this.tasks;
 	}
 	
 	public void deleteTask(Task task){

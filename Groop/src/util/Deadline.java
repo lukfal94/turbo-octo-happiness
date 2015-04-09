@@ -1,11 +1,12 @@
 package util;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class Deadline{
 	
-	private Date dueDate;
+	private Calendar dueDate;
 	private String priority;
 	
 	public void setDueDate(int year, int month, int day, int hr, int min, int sec){
@@ -16,7 +17,7 @@ public class Deadline{
 	}
 	
 	public Calendar getDueDate(){
-		return dueDate
+		return dueDate;
 	}
 	
 	public void setPriority(String newPriority){

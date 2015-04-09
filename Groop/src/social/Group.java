@@ -1,5 +1,8 @@
 package social;
 
+import managers.ActivityManager;
+import managers.TaskManager;
+
 public class Group {
 	private int id;
 	private User creator;

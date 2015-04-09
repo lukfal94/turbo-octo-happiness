@@ -40,7 +40,7 @@ public class Activity {
 	}
 	
 	public Task getTask() {
-		return task
+		return this.task;
 	}
 	
 	public void setTask(Task newTask) {

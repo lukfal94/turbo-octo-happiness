@@ -5,5 +5,4 @@ import java.util.ArrayList;
 
 public class GroupManager {
 	private ArrayList<Group> groups;
-	
 }
