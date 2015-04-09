@@ -1,6 +1,9 @@
-package social;
+package util;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import social.User;
 
 public class Task{
 	private int id;

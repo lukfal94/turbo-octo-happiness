@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import social.User;
 import userInterface.LoginWindow;
+import util.Task;
 
 // Communicates w/ the Database to verify user when logging in, or
 // to register a new user if they are not in the database.
@@ -64,5 +65,19 @@ public class Registrar {
 		usr = mapper.readValue(jsonUrl, User.class);
 		
 		return usr;
+	}
+	public Object getTaskByID(int id) 
+			throws JsonParseException, JsonMappingException, IOException{
+		Task task = null;
+		ServerResponse response = null;
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?id="+id);
+
+		try {
+			task = mapper.readValue(jsonUrl, Task.class);
+			return task;
+		} catch(Exception ex) {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response;
+		}
 	}
 }

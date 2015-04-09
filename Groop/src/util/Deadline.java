@@ -1,10 +1,11 @@
-package social;
+package util;
 
+import java.sql.Date;
 import java.util.List;
 
 public class Deadline{
 	
-	private Calendar dueDate;
+	private Date dueDate;
 	private String priority;
 	
 	public void setDueDate(int year, int month, int day, int hr, int min, int sec){

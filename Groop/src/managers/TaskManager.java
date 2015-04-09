@@ -1,6 +1,9 @@
-package social;
+package managers;
 
 import java.util.List;
+
+import util.Deadline;
+import util.Task;
 
 public class TaskManager{
 	private ArrayList<Task> tasks;
@@ -36,7 +39,7 @@ public class TaskManager{
 		task = null;
 	}
 	
-	public ActivityManager getAvtivityManager() {
+	public ActivityManager getActivityManager() {
 		return activityManager;
 	}
 	

@@ -1,4 +1,7 @@
+package util;
 import java.util.Date;
+
+import social.User;
 
 public class Activity {
 	

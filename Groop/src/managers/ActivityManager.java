@@ -1,4 +1,7 @@
+package managers;
 import java.util.ArrayList;
+
+import util.Activity;
 
 public class ActivityManager {
 	
