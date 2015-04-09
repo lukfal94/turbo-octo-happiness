@@ -13,6 +13,9 @@ public class Task{
 	private ArrayList<User> assignedTo;
 	private boolean complete;
 	
+	public enum TaskPriority {
+		NONE, LOW, MEDIUM, HIGH
+	}
 	// constructor
 	public Task(){
 		

@@ -1,5 +1,6 @@
 package managers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import util.Deadline;
@@ -12,7 +13,6 @@ public class TaskManager{
 	// constructor
 	public TaskManager(){
 		this.tasks = new ArrayList<Task>();
-		this.activity = new ActivityManager;
 	}
 	
 	public Task createTask(String title, String description, Deadline deadline){

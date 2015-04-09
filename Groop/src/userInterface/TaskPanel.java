@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -12,20 +13,29 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.acl.Group;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerModel;
 import javax.swing.SwingConstants;
 
+import managers.SessionManager;
 import social.User;
+import util.Task.TaskPriority;
 
 public class TaskPanel extends JPanel{
-	private User activeUser;
-	private Group activeGroup;
+	private SessionManager sessionManager;
 	
 	private JButton createTaskButton;
 	
@@ -88,15 +98,23 @@ public class TaskPanel extends JPanel{
 		private JLabel deadlineLabel;
 		private JLabel priorityLabel;
 		
+		// Input Elements
 		private JTextField titleTextField;
 		private JTextArea descriptionTextArea;
+		private JFormattedTextField deadlineTextField;
+		private JComboBox priorityComboBox;
+		
+		// Action Buttons
+		private JButton submitButton;
 		
 		// Layout members
+		private BorderLayout borderLayout = new BorderLayout();
 		private GridBagLayout gbLayout = new GridBagLayout();
 		private GridBagConstraints gbC = new GridBagConstraints();
 		
 		public TaskWindow(TaskWindowMode mode) {
 			this.currMode = mode;
+			this.setLayout(borderLayout);
 			
 			// Init Common Elements
 			initCommon();
@@ -122,33 +140,59 @@ public class TaskPanel extends JPanel{
 
 		private void initCommon() {
 			taskWindowPanel = new JPanel();
-
+			taskWindowPanel.setBackground(Color.GRAY);;
+			
 			// Init layout tools
 			gbLayout = new GridBagLayout();
 			gbC = new GridBagConstraints();
 			
+			gbC.fill = GridBagConstraints.HORIZONTAL;
+			
 			taskWindowPanel.setLayout(gbLayout);
 			
-			// Initialize label fields
-			titleLabel = new JLabel("Title:");
-			descriptionLabel = new JLabel("Description:");
-			deadlineLabel = new JLabel("Deadline:");
-			priorityLabel = new JLabel("Priority:");
+			// Initialize field label
+			titleLabel = new JLabel("Title", SwingConstants.RIGHT);
+			descriptionLabel = new JLabel("Description", SwingConstants.RIGHT);
+			deadlineLabel =	new JLabel("Deadline", SwingConstants.RIGHT);
+			priorityLabel = new JLabel("Priority", SwingConstants.RIGHT);
 			
+			// Init input fields
 			titleTextField = new JTextField(20);
-			descriptionTextArea = new JTextArea(4, 30);
+			descriptionTextArea = new JTextArea(3, 30);
+			deadlineTextField = new JFormattedTextField(new SimpleDateFormat("MM/dd/yyyy HH:mm"));
+			priorityComboBox = new JComboBox(TaskPriority.values());
+			
+			submitButton = new JButton("Submit");
+			submitButton.addActionListener(new SubmitButtonPress());
 			descriptionTextArea.setLineWrap(true);
+			descriptionTextArea.setWrapStyleWord(true);
+			deadlineTextField.setText("mm/dd/yyyy hh:mm");
 			
-			this.addComponent(0, 0, 1, 1, gbC, taskWindowPanel, titleLabel);
-			this.addComponent(1, 0, 5, 1, gbC, taskWindowPanel, titleTextField);
+			
+			/*
+			 * How we'll parse date
+			String s = "03/24/2013 21:54";
+	        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+			
+	        try {
+	        	Date exDate = simpleDateFormat.parse(s);
+		        System.out.println(exDate);
+	        } catch(Exception ex) {
+	        	System.out.println("Ooops");
+	        }
+	        */
+	        
+			this.addComponent(0, 0, 3, 1, gbC, taskWindowPanel, titleLabel);
+			this.addComponent(3, 0, 5, 1, gbC, taskWindowPanel, titleTextField);
 			this.addComponent(0, 1, 3, 1, gbC, taskWindowPanel, descriptionLabel);
-			this.addComponent(3, 1, 6, 3, gbC, taskWindowPanel, descriptionTextArea);
-			this.addComponent(0, 6, 3, 1, gbC, taskWindowPanel, deadlineLabel);
-			this.addComponent(0, 7, 1, 1, gbC, taskWindowPanel, priorityLabel);
-
-			this.add(taskWindowPanel);
+			this.addComponent(3, 1, 6, 2, gbC, taskWindowPanel, descriptionTextArea);
+			this.addComponent(0, 7, 3, 1, gbC, taskWindowPanel, deadlineLabel);
+			this.addComponent(3, 7, 5, 1, gbC, taskWindowPanel, deadlineTextField);
+			this.addComponent(0, 8, 3, 1, gbC, taskWindowPanel, priorityLabel);
+			this.addComponent(3, 8, 5, 1, gbC, taskWindowPanel, priorityComboBox);
+			this.addComponent(2, 9, 3, 1, gbC, taskWindowPanel, submitButton);
 			
-			
+			this.add(taskWindowPanel, BorderLayout.CENTER);
 		}
 		// Initializes the components for the "New Task" window
 		private void initNewTaskWindow() {
@@ -170,6 +214,17 @@ public class TaskPanel extends JPanel{
 		    gbLayout.setConstraints( aComponent, c );  
 		    aContainer.add( aComponent );  
 		} 
+		
+		private class SubmitButtonPress implements ActionListener {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Title: "+titleTextField.getText());
+				System.out.println("Descr: "+descriptionTextArea.getText());
+				System.out.println("Deadl: "+deadlineTextField.getText());
+				System.out.println("Prior: "+TaskPriority.values()[priorityComboBox.getSelectedIndex()]);
+			}
+		}
 		
 		private void addComponent(int x, int y, int w, int h, int padx, int pady, Insets inset, double weightx, double weighty,
 				GridBagConstraints c, Container aContainer, Component aComponent )  
