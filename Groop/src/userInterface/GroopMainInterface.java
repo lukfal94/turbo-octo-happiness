@@ -29,13 +29,56 @@ public class GroopMainInterface extends JFrame{
 	private TaskPanel taskPanel;
 	private CalendarPanel calendarPanel;
 	
+	public enum GuiMode {
+		BLANK, TUTORIAL, STANDARD
+	}
+	
 	public GroopMainInterface(User user) {
 		sessionManager = new SessionManager(user);
 		
-		initComponents();
+		if(sessionManager.getGuiMode() == GuiMode.STANDARD)
+			initStandardComponents();
+		else if(sessionManager.getGuiMode() == GuiMode.BLANK) 
+			initBlankComponents();
+	}
+
+	private void initStandardComponents() {
+		this.setTitle("Groop - " + sessionManager.getUser().getUsername());
+
+		this.setSize(1200, 800);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		// Center the frame in the screen
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+		
+		gbLayout = new GridBagLayout();
+		gbC = new GridBagConstraints();
+		
+		gbC.fill = GridBagConstraints.BOTH;
+		gbC.weightx = 0.5;
+		gbC.weighty = 0.5;
+		
+		this.setLayout(gbLayout);
+		
+		// Initialize the content panes
+		userInfoPanel = new UserInfoPanel(sessionManager);
+		groupInfoPanel = new GroupInfoPanel(sessionManager);
+		activityPanel = new ActivityPanel();
+		taskPanel = new TaskPanel();
+		calendarPanel = new CalendarPanel();
+		
+		this.addComponent(0, 0, 1, 1, gbC, this, userInfoPanel);
+		this.addComponent(1, 0, 1, 1, gbC, this, groupInfoPanel);
+		this.addComponent(0, 1, 3, 3, gbC, this, calendarPanel);
+		this.addComponent(3, 0, 1, 2, gbC, this, taskPanel);
+		this.addComponent(3, 2, 1, 2, gbC, this, activityPanel);
+		
+		
+		this.setVisible(true);
 	}
 	
-	private void initComponents() {
+	private void initBlankComponents() {
 		this.setTitle("Groop - " + sessionManager.getUser().getUsername());
 
 		this.setSize(1200, 800);

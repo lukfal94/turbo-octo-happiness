@@ -47,7 +47,6 @@ public class GroupManager {
 		} catch (Exception ex) {
 			System.out.println(ex);
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
-			System.out.println(":)");
 			return response.getServerErrorMessage();
 		}
 	}

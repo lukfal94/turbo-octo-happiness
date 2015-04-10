@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import userInterface.GroopMainInterface.GuiMode;
 import managers.SessionManager;
 
 public class GroupInfoPanel extends JPanel {
@@ -23,7 +24,8 @@ public class GroupInfoPanel extends JPanel {
 	public GroupInfoPanel(SessionManager sm) {
 		this.sessionManager = sm;
 		
-		initComponents();
+		if(sessionManager.getGuiMode() == GuiMode.STANDARD)
+			initComponents();
 		
 		this.setBackground(Color.BLUE);
 	}

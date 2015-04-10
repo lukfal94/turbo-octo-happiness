@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import databaseComm.ServerResponse.ServerErrorMessage;
 import social.Group;
 import social.User;
+import userInterface.GroopMainInterface.GuiMode;
 
 /*
  * The session manager stores the active User object,
@@ -15,6 +16,7 @@ import social.User;
 public class SessionManager {
 	private User activeUser;
 	private Group activeGroup;
+	private GuiMode guiMode;
 	private GroupManager gm;
 	
 	public SessionManager(User user) {
@@ -28,15 +30,17 @@ public class SessionManager {
 		try {
 			syncStatus = gm.syncGroups();
 		} catch( Exception ex) {
-			System.out.println(ex);
+			
 		}
 		
 		if(syncStatus == ServerErrorMessage.NO_GROUPS) {
-
+			System.out.println("No Groups");
+			setGuiMode(GuiMode.BLANK);
 		}
 		else if(syncStatus == ServerErrorMessage.NO_ERROR) {
 			// Set the active group to the first group.
 			setActiveGroup(gm.getGroups().get(0));
+			setGuiMode(GuiMode.STANDARD);
 			
 			System.out.println(gm.getGroups().get(0).getName());
 		}
@@ -56,5 +60,13 @@ public class SessionManager {
 
 	public void setActiveGroup(Group activeGroup) {
 		this.activeGroup = activeGroup;
+	}
+
+	public GuiMode getGuiMode() {
+		return guiMode;
+	}
+
+	public void setGuiMode(GuiMode guiMode) {
+		this.guiMode = guiMode;
 	}
 }
