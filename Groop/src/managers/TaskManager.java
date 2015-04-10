@@ -25,7 +25,7 @@ public class TaskManager{
 	}
 	
 	public void createTasks(int numTasks){
-		for(int i = 0; i < tasks.size(); i++){
+		for(int i = 0; i < numTasks; i++){
 			this.tasks.add(createTask("","",null));
 		}
 	}

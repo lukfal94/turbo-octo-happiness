@@ -2,14 +2,17 @@ package databaseComm;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import social.User;
+import social.Group;
 import userInterface.LoginWindow;
 import util.Task;
+import util.Task.TaskPriority;
 
 // Communicates w/ the Database to verify user when logging in, or
 // to register a new user if they are not in the database.
@@ -56,6 +59,7 @@ public class Registrar {
 			return response;
 		}
 	}
+	
 	public User getUserByID(int id) throws JsonParseException, JsonMappingException, IOException {
 		// TODO Auto-generated method stub
 		User usr = null;
@@ -66,6 +70,24 @@ public class Registrar {
 		
 		return usr;
 	}
+	
+	public Object addNewTask(Group group, User user, String title, String description, Date deadline, TaskPriority priority)
+			throws JsonParseException, JsonMappingException, IOException {
+		Task task = null;
+		ServerResponse response = null;
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=0&gid=" + group.getId()
+				+ "&uid=" + user.getId() + "&title=" + title + "&desc=" + description 
+				+ "&dline=" + deadline.toString() + "&prior=" + priority.ordinal());
+		
+		try {
+			task = mapper.readValue(jsonUrl, Task.class);
+			return task;
+		} catch(Exception ex) {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response;
+		}
+	}
+	
 	public Object getTaskByID(int id) 
 			throws JsonParseException, JsonMappingException, IOException{
 		Task task = null;

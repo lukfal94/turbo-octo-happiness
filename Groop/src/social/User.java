@@ -61,4 +61,7 @@ public class User{
 	public void setUsername(String username){
 		this.username = username;
 	}
+	public String getFullname() {
+		return this.firstname + " " + this.lastname;
+	}
 }

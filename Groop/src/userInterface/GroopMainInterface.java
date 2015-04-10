@@ -14,25 +14,29 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import managers.SessionManager;
 import social.User;
 
 public class GroopMainInterface extends JFrame{
-	private User activeUser;
+	private SessionManager sessionManager;
+	
 	private GridBagLayout gbLayout;
 	private GridBagConstraints gbC;
 	
 	private UserInfoPanel userInfoPanel;
+	private GroupInfoPanel groupInfoPanel;
 	private ActivityPanel activityPanel;
 	private TaskPanel taskPanel;
 	private CalendarPanel calendarPanel;
 	
 	public GroopMainInterface(User user) {
-		activeUser = user;
+		sessionManager = new SessionManager(user);
+		
 		initComponents();
 	}
 	
 	private void initComponents() {
-		this.setTitle("Groop - " + activeUser.getUsername());
+		this.setTitle("Groop - " + sessionManager.getUser().getUsername());
 
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,16 +48,26 @@ public class GroopMainInterface extends JFrame{
 		gbLayout = new GridBagLayout();
 		gbC = new GridBagConstraints();
 		
+		gbC.fill = GridBagConstraints.BOTH;
+		gbC.weightx = 0.5;
+		gbC.weighty = 0.5;
+		
 		this.setLayout(gbLayout);
 		
-		userInfoPanel = new UserInfoPanel();
+		// Initialize the content panes
+		userInfoPanel = new UserInfoPanel(sessionManager);
+		groupInfoPanel = new GroupInfoPanel(sessionManager);
 		activityPanel = new ActivityPanel();
 		taskPanel = new TaskPanel();
 		calendarPanel = new CalendarPanel();
 		
-		this.addComponent(0, 0, 4, 3, 0, 0, new Insets(0, 0, 0, 0), 0, 0, gbC, this, userInfoPanel);
-		this.addComponent(0, 3, 8, 6, 0, 0, new Insets(5, 5, 5, 5), 0, 0, gbC, this, activityPanel);
-		this.addComponent(0, 9, 8, 6, 0, 0, new Insets(0, 0, 0, 0), 0, 0, gbC, this, taskPanel);
+		this.addComponent(0, 0, 1, 1, gbC, this, userInfoPanel);
+		this.addComponent(1, 0, 1, 1, gbC, this, groupInfoPanel);
+		this.addComponent(0, 1, 3, 3, gbC, this, calendarPanel);
+		this.addComponent(3, 0, 1, 2, gbC, this, taskPanel);
+		this.addComponent(3, 2, 1, 2, gbC, this, activityPanel);
+		
+		
 		this.setVisible(true);
 	}
 	
@@ -65,18 +79,13 @@ public class GroopMainInterface extends JFrame{
 		this.taskPanel = taskPanel;
 	}
 
-	private void addComponent(int x, int y, int w, int h, int padx, int pady, Insets inset, double weightx, double weighty,
+	private void addComponent(int x, int y, int w, int h,
 			GridBagConstraints c, Container aContainer, Component aComponent )  
 	{  
 	    c.gridx = x;  
 	    c.gridy = y;  
 	    c.gridwidth = w;  
 	    c.gridheight = h;
-	    c.ipadx = padx;
-	    c.ipady = pady;
-	    c.insets = inset;
-	    c.weightx = weightx;
-	    c.weighty = weighty;
 	    gbLayout.setConstraints( aComponent, c );  
 	    aContainer.add( aComponent );  
 	} 

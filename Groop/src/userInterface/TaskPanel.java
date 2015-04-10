@@ -30,6 +30,7 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SwingConstants;
 
+import databaseComm.Registrar;
 import managers.SessionManager;
 import social.User;
 import util.Task.TaskPriority;
@@ -51,6 +52,7 @@ public class TaskPanel extends JPanel{
 		createTaskButton.addActionListener(new TaskWindowButtonClick());
 		createTaskButton.setName("createTaskButton");
 		
+		this.setBackground(Color.CYAN);
 		this.add(createTaskButton);
 	}
 	public enum TaskWindowMode {
@@ -201,6 +203,7 @@ public class TaskPanel extends JPanel{
 		} 
 		
 		private class SubmitButtonPress implements ActionListener {
+			private Registrar registrar = new Registrar();
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
