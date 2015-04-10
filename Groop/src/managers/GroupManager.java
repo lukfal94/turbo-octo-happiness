@@ -33,7 +33,7 @@ public class GroupManager {
 		this.userID = sessionManager.getUser().getId();
 	}
 	
-	// Returns true if sync is successful, false otherwise.
+	// Returns ServerErrorMessage.NO_ERROR if sync is successful, .NO_GROUPS otherwise.
 	public ServerErrorMessage syncGroups() throws JsonParseException, JsonMappingException, IOException {
 		ServerResponse response = null;
 		List<Group> groups = null;
@@ -42,6 +42,7 @@ public class GroupManager {
 		
 		try {
 			groups = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Group>>() { });
+			
 			this.groups = (ArrayList<Group>) groups;
 			return ServerErrorMessage.NO_ERROR;
 		} catch (Exception ex) {

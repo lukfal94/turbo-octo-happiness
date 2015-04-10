@@ -12,6 +12,9 @@ import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import managers.SessionManager;
@@ -22,6 +25,10 @@ public class GroopMainInterface extends JFrame{
 	
 	private GridBagLayout gbLayout;
 	private GridBagConstraints gbC;
+	
+	private JMenuBar menuBar;
+	private JMenu fileMenu, newMenu, editMenu, groupMenu;
+	private JMenuItem menuItem;
 	
 	private UserInfoPanel userInfoPanel;
 	private GroupInfoPanel groupInfoPanel;
@@ -47,6 +54,19 @@ public class GroopMainInterface extends JFrame{
 
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		// Initialize the menubar
+		menuBar = new JMenuBar();
+		
+		// Build File menu
+		fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		
+		fileMenu.add(new JMenuItem("Logout"));
+		fileMenu.add(new JMenuItem("Quit"));
+		
+//		
+//		fileMenu.add()
 		
 		// Center the frame in the screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

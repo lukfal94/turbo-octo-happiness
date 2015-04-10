@@ -34,7 +34,6 @@ public class SessionManager {
 		}
 		
 		if(syncStatus == ServerErrorMessage.NO_GROUPS) {
-			System.out.println("No Groups");
 			setGuiMode(GuiMode.BLANK);
 		}
 		else if(syncStatus == ServerErrorMessage.NO_ERROR) {
