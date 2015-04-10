@@ -1,4 +1,7 @@
+package util;
 import java.util.Date;
+
+import social.User;
 
 public class Activity {
 	
@@ -37,7 +40,7 @@ public class Activity {
 	}
 	
 	public Task getTask() {
-		return task
+		return this.task;
 	}
 	
 	public void setTask(Task newTask) {

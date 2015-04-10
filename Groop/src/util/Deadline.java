@@ -1,5 +1,7 @@
-package social;
+package util;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class Deadline{
@@ -15,7 +17,7 @@ public class Deadline{
 	}
 	
 	public Calendar getDueDate(){
-		return dueDate
+		return dueDate;
 	}
 	
 	public void setPriority(String newPriority){

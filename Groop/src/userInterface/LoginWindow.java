@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -64,6 +65,7 @@ public class LoginWindow extends JFrame{
 		loginPanel.setLayout(gLayout);
 		
 		msgLabel = new JLabel();
+		msgLabel.setForeground(Color.RED);
 		
 		usernameLabel = new JLabel("Username");
 		passwordLabel = new JLabel("Password");
@@ -92,6 +94,8 @@ public class LoginWindow extends JFrame{
 		
 		this.add(loginPanel);
 		
+		//this.getRootPane().setDefaultButton(loginButton);
+		
 		this.setVisible(true);
 	}
 	
@@ -101,9 +105,14 @@ public class LoginWindow extends JFrame{
 			Object registrarResponse = null;
 			ServerResponse serverResponse= null;
 			
+			if(usernameTextField.getText().equals("")) {
+				msgLabel.setText("Please enter a username");
+				return;
+			}
 			try {
 				registrarResponse = registrar.login(usernameTextField.getText(), String.valueOf(passwordTextField.getPassword()));
 			} catch(Exception ex) {
+				
 				System.out.println(">>" + ex);
 				return;
 			}

@@ -1,6 +1,9 @@
-package social;
+package util;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import social.User;
 
 public class Task{
 	private int id;
@@ -10,6 +13,9 @@ public class Task{
 	private ArrayList<User> assignedTo;
 	private boolean complete;
 	
+	public enum TaskPriority {
+		NONE, LOW, MEDIUM, HIGH
+	}
 	// constructor
 	public Task(){
 		
@@ -46,20 +52,12 @@ public class Task{
 		return  description;
 	}
 	
-	public void setDeadline(String priority, int year, int month, int day, int hr, int min, int sec){
-		Deadline deadline;
-		deadline.setDueDate(year, month, day, hr, min, sec);
-		deadline.setPriority(priority);
-		
+	public void setDeadline(Deadline deadline){
 		this.deadline = deadline;
 	}
 	
 	public Deadline getDeadline(){
 		return  deadline;
-	}
-	
-	public void createNewAssignedTo(){
-		this.assignedTo = new ArrayList<User>;
 	}
 	
 	public void addToAssignedTo(User user){

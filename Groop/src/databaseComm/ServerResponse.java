@@ -1,6 +1,5 @@
 package databaseComm;
 
-import databaseComm.ServerResponse.ServerErrorMessage;
 
 public class ServerResponse {
 	private ServerErrorMessage errMsg;
@@ -8,8 +7,15 @@ public class ServerResponse {
 	
 	private ServerErrorMessage[] errMsgs = ServerErrorMessage.values();
 	
+	public ServerResponse() {
+		
+	}
+	
+	public ServerResponse(int errMsg) {
+		setErrMsg(errMsg);
+	}
 	public enum ServerErrorMessage {
-		NO_ERROR, DATABASE_CONN, USER_TAKEN, INCORRECT_PASSWORD, USER_NOT_FOUND, EMAIL_TAKEN
+		NO_ERROR, DATABASE_CONN, USER_TAKEN, INCORRECT_PASSWORD, USER_NOT_FOUND, EMAIL_TAKEN, NO_GROUPS
 	}
 	
 	public int getErrorCode() {
