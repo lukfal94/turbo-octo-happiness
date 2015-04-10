@@ -59,7 +59,6 @@ public class RegisterWindow extends JFrame{
 	
 	public RegisterWindow(String username, LoginWindow caller) {
 		this.loginWindow = caller;
-		caller.setEnabled(false);
 		
 		initComponents(username);
 	}

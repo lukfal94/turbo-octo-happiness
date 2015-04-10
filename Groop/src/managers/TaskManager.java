@@ -1,6 +1,10 @@
-package social;
+package managers;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import util.Deadline;
+import util.Task;
 
 public class TaskManager{
 	private ArrayList<Task> tasks;
@@ -9,7 +13,6 @@ public class TaskManager{
 	// constructor
 	public TaskManager(){
 		this.tasks = new ArrayList<Task>();
-		this.activity = new ActivityManager;
 	}
 	
 	public Task createTask(String title, String description, Deadline deadline){
@@ -22,13 +25,13 @@ public class TaskManager{
 	}
 	
 	public void createTasks(int numTasks){
-		for(int i = 0; i < numTasks){
+		for(int i = 0; i < numTasks; i++){
 			this.tasks.add(createTask("","",null));
 		}
 	}
 	
 	public ArrayList<Task> getTasks(){
-		return this.tasks
+		return this.tasks;
 	}
 	
 	public void deleteTask(Task task){
@@ -36,7 +39,7 @@ public class TaskManager{
 		task = null;
 	}
 	
-	public ActivityManager getAvtivityManager() {
+	public ActivityManager getActivityManager() {
 		return activityManager;
 	}
 	
