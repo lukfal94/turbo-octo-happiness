@@ -21,32 +21,44 @@ public class SessionManager {
 	
 	public SessionManager(User user) {
 		this.activeUser = user;
+		
 		this.gm = new GroupManager();
 		
 		gm.setSessionManager(this);
 		
-		ServerErrorMessage syncGroups = null;
+		this.startSession();
+	}
+	
+	private void startSession() {
+		
+		// Fetch the groups the User is in
+		ServerErrorMessage syncStatus = null;
 		
 		try {
-			syncGroups = gm.syncGroups();
+			syncStatus = gm.syncGroups();
 		} catch( Exception ex) {
-			
+			System.out.println("Error: Could not sync groups");
 		}
-		
-		if(syncGroups == ServerErrorMessage.NO_GROUPS) {
+		if(syncStatus == ServerErrorMessage.NO_GROUPS) {
 			setGuiMode(GuiMode.BLANK);
 		}
-		else if(syncGroups == ServerErrorMessage.NO_ERROR) {
+		else if(syncStatus == ServerErrorMessage.NO_ERROR) {
 			// Set the active group to the first group.
 			setActiveGroup(gm.getGroups().get(0));
 			setGuiMode(GuiMode.STANDARD);
 			
 			System.out.println(gm.getGroups().get(0).getName());
 		}
-	}
-	
-	public User getUser() {
-		return this.activeUser;
+		
+		// Tasks
+		for(Group g : gm.getGroups()) {
+			try {
+				syncStatus = g.getTaskManager().syncTasks(g.getId());
+			} catch( Exception ex) {
+				System.out.println(">>" + ex);
+				System.out.println("Error: Could not sync tasks for group");
+			}
+		}
 	}
 	
 	public ArrayList<Group> getGroups() {
@@ -75,5 +87,10 @@ public class SessionManager {
 
 	public void setActiveUser(User activeUser) {
 		this.activeUser = activeUser;
+	}
+
+	public void switchGroup(Group group) {
+		// TODO Auto-generated method stub
+		this.activeGroup = group;
 	}
 }

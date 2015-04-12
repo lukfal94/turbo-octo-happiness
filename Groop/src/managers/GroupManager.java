@@ -11,12 +11,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import social.Group;
+import social.User;
+import databaseComm.Registrar;
 import databaseComm.ServerResponse;
 import databaseComm.ServerResponse.ServerErrorMessage;
 
 public class GroupManager {
 	private ArrayList<Group> groups;
-	private int userID;
+	private User user;
 	private SessionManager sessionManager;
 	private ObjectMapper mapper;
 	
@@ -30,7 +32,7 @@ public class GroupManager {
 
 	public void setSessionManager(SessionManager sessionManager) {
 		this.sessionManager = sessionManager;
-		this.userID = sessionManager.getUser().getId();
+		this.user = sessionManager.getActiveUser();
 	}
 	
 	// Returns ServerErrorMessage.NO_ERROR if sync is successful, .NO_GROUPS otherwise.
@@ -38,7 +40,7 @@ public class GroupManager {
 		ServerResponse response = null;
 		List<Group> groups = null;
 		
-		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/groups.php?uid=" + userID);
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/groups.php?uid=" + user.getId());
 		
 		try {
 			groups = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Group>>() { });

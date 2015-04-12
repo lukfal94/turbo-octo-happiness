@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import managers.SessionManager;
+import social.Group;
 import social.User;
 import userInterface.TaskPanel.TaskWindowMode;
 
@@ -31,7 +32,7 @@ public class GroopMainInterface extends JFrame{
 	private GridBagConstraints gbC;
 	
 	private JMenuBar menuBar;
-	private JMenu fileMenu, newMenu, editMenu, groupMenu;
+	private JMenu fileMenu, newMenu, editMenu, groupMenu, switchGroupMenu;
 	private JMenuItem menuItem;
 	
 	private UserInfoPanel userInfoPanel;
@@ -39,6 +40,7 @@ public class GroopMainInterface extends JFrame{
 	private ActivityPanel activityPanel;
 	private TaskPanel taskPanel;
 	private CalendarPanel calendarPanel;
+
 	
 	public enum GuiMode {
 		BLANK, TUTORIAL, STANDARD
@@ -46,7 +48,7 @@ public class GroopMainInterface extends JFrame{
 	
 	public GroopMainInterface(User user) {
 		sessionManager = new SessionManager(user);
-		this.setTitle("Groop - " + sessionManager.getUser().getUsername());
+		this.setTitle("Groop - " + sessionManager.getActiveUser().getUsername());
 
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,6 +65,18 @@ public class GroopMainInterface extends JFrame{
 			initBlankComponents();
 	}
 
+	private class GroupMenuItem extends JMenuItem {
+		private Group group;
+		
+		public GroupMenuItem(Group g) {
+			this.setText(g.getName());
+			this.group = g;
+		}
+		
+		public Group getGroup() {
+			return this.group;
+		}
+	}
 	private void initMenuBar() {
 		// Initialize the menubar
 		menuBar = new JMenuBar();
@@ -116,6 +130,15 @@ public class GroopMainInterface extends JFrame{
 		groupMenu = new JMenu("Group");
 		groupMenu.setMnemonic(KeyEvent.VK_G);
 		
+		switchGroupMenu = new JMenu("Switch to");
+
+		for(Group g : sessionManager.getGroups()) {
+			menuItem = new GroupMenuItem(g);
+			menuItem.addActionListener(new MenuActionListener());
+			switchGroupMenu.add(menuItem);
+		}
+		groupMenu.add(switchGroupMenu);
+		
 		menuItem = new JMenuItem("Invite User");
 		menuItem.addActionListener(new MenuActionListener());
 		groupMenu.add(menuItem);
@@ -162,7 +185,7 @@ public class GroopMainInterface extends JFrame{
 	}
 	
 	private void initBlankComponents() {
-		this.setTitle("Groop - " + sessionManager.getUser().getUsername());
+		this.setTitle("Groop - " + sessionManager.getActiveUser().getUsername());
 
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -201,14 +224,20 @@ public class GroopMainInterface extends JFrame{
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			GroopMainInterface parent = GroopMainInterface.this;
+			GroopMainInterface mainGui = GroopMainInterface.this;
 			
 			System.out.println("Selected: " + e.getActionCommand());
 			
+			if(e.getSource().getClass().equals(GroupMenuItem.class)) {
+				GroupMenuItem gMenuItem = (GroupMenuItem) e.getSource();
+				sessionManager.switchGroup(gMenuItem.getGroup());
+				mainGui.refreshInterface();
+				
+			}
 			// NEED TO CHECK FOR ACTIVE GROUP OR DISABLE MENU BUTTONS
 			if(e.getActionCommand().equals("Task")) {
 				// Launch the new task window
-				parent.getTaskPanel().openTaskWindow(TaskWindowMode.NEW_TASK);
+				mainGui.getTaskPanel().openTaskWindow(TaskWindowMode.NEW_TASK);
 				
 				//GroopMainInterface.this.sessionManager.getActiveGroup().getTaskManager()
 				
@@ -220,6 +249,11 @@ public class GroopMainInterface extends JFrame{
 	
 	public TaskPanel getTaskPanel() {
 		return taskPanel;
+	}
+
+	public void refreshInterface() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void setTaskPanel(TaskPanel taskPanel) {
