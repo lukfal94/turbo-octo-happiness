@@ -61,9 +61,7 @@ public class TaskPanel extends JPanel{
 	public enum TaskWindowMode {
 		NEW_TASK, EDIT_TASK
 	}
-	
 
-	
 	private class TaskWindowButtonClick implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {

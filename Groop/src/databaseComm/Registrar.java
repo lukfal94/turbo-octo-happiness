@@ -115,4 +115,9 @@ public class Registrar {
 			return response;
 		}
 	}
+
+	public Object addNewActivity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

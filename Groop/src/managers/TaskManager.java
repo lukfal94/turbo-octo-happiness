@@ -18,20 +18,6 @@ public class TaskManager{
 	public void addTask(Task task) {
 		this.tasks.add(task);
 	}
-	public Task createTask(String title, String description, Deadline deadline){
-		Task task = new Task();
-		task.setTitle(title);
-		task.setDescription(description);
-		task.setDeadline(deadline);
-		
-		return task;
-	}
-	
-	public void createTasks(int numTasks){
-		for(int i = 0; i < numTasks; i++){
-			this.tasks.add(createTask("","",null));
-		}
-	}
 	
 	public ArrayList<Task> getTasks(){
 		return this.tasks;

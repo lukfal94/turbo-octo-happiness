@@ -1,7 +1,10 @@
 
 package social;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import util.Task;
 
 public class User{
    	private String email;
@@ -13,6 +16,12 @@ public class User{
    	private String phone;
    	private String username;
 
+   	private ArrayList<Task> assignedTasks;
+
+   	public User() {
+   		assignedTasks = new ArrayList<Task>();
+   	}
+   	
  	public String getEmail(){
 		return this.email;
 	}
@@ -63,5 +72,16 @@ public class User{
 	}
 	public String getFullname() {
 		return this.firstname + " " + this.lastname;
+	}
+	public void assignTask(Task task) {
+		this.assignedTasks.add(task);
+	}
+
+	public ArrayList<Task> getAssignedTasks() {
+		return assignedTasks;
+	}
+
+	public void setAssignedTasks(ArrayList<Task> assignedTasks) {
+		this.assignedTasks = assignedTasks;
 	}
 }
