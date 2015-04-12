@@ -12,7 +12,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.acl.Group;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -31,8 +30,10 @@ import javax.swing.SpinnerModel;
 import javax.swing.SwingConstants;
 
 import databaseComm.Registrar;
+import databaseComm.ServerResponse;
 import managers.SessionManager;
 import social.User;
+import util.Task;
 import util.Task.TaskPriority;
 
 public class TaskPanel extends JPanel{
@@ -40,7 +41,8 @@ public class TaskPanel extends JPanel{
 	
 	private JButton createTaskButton;
 	
-	public TaskPanel() {
+	public TaskPanel(SessionManager sm) {
+		this.sessionManager = sm;
 		initComponents();
 	}
 	
@@ -55,6 +57,7 @@ public class TaskPanel extends JPanel{
 		this.setBackground(Color.CYAN);
 		this.add(createTaskButton);
 	}
+	
 	public enum TaskWindowMode {
 		NEW_TASK, EDIT_TASK
 	}
@@ -69,10 +72,10 @@ public class TaskPanel extends JPanel{
 //			else if(e.getSource().equals(editTaskButton))
 //				openTaskWindow(TaskWindowMode.EDIT_TASK);
 		}
-		
-		private void openTaskWindow(TaskWindowMode mode) {
-			TaskWindow taskWindow = new TaskWindow(mode);
-		}
+	}
+	
+	public void openTaskWindow(TaskWindowMode mode) {
+		TaskWindow taskWindow = new TaskWindow(mode);
 	}
 
 	private class TaskWindow extends JFrame {
@@ -181,6 +184,7 @@ public class TaskPanel extends JPanel{
 			
 			this.add(taskWindowPanel, BorderLayout.CENTER);
 		}
+		
 		// Initializes the components for the "New Task" window
 		private void initNewTaskWindow() {
 
@@ -204,9 +208,29 @@ public class TaskPanel extends JPanel{
 		
 		private class SubmitButtonPress implements ActionListener {
 			private Registrar registrar = new Registrar();
+			private SessionManager sm;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				sm = TaskPanel.this.sessionManager;
+				Object response = null;
+
+				// Send the new task to the DB.
+				try {
+					response = registrar.addNewTask(sm.getActiveGroup(), sm.getActiveUser(), titleTextField.getText(),
+						descriptionTextArea.getText(), new Date(), priorityComboBox.getSelectedIndex());
+				} catch(Exception ex) {
+					System.out.println(ex);
+				}
+				
+				if(response.getClass().equals(ServerResponse.class)) {
+					ServerResponse servResponse = (ServerResponse)response;
+					// TODO Error handling
+				} else if(response.getClass().equals(Task.class)) {
+					Task newTask = (Task)response;
+					sm.getActiveGroup().getTaskManager().addTask(newTask);
+				}
+				
 				System.out.println("Title: "+titleTextField.getText());
 				System.out.println("Descr: "+descriptionTextArea.getText());
 				System.out.println("Deadl: "+deadlineTextField.getText());

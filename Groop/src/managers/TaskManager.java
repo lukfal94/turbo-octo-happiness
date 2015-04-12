@@ -15,6 +15,9 @@ public class TaskManager{
 		this.tasks = new ArrayList<Task>();
 	}
 	
+	public void addTask(Task task) {
+		this.tasks.add(task);
+	}
 	public Task createTask(String title, String description, Deadline deadline){
 		Task task = new Task();
 		task.setTitle(title);

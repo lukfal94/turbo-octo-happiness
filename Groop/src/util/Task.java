@@ -7,81 +7,70 @@ import social.User;
 
 public class Task{
 	private int id;
+	private int createdBy;
 	private String title;
 	private String description;
 	private Deadline deadline;
 	private ArrayList<User> assignedTo;
-	private boolean complete;
+	private boolean completed;
 	
 	public enum TaskPriority {
 		NONE, LOW, MEDIUM, HIGH
 	}
-	// constructor
-	public Task(){
-		
-		id = 0;
-		title = "";
-		description = "";
-		deadline = new Deadline();
-		assignedTo = new ArrayList<User>();
-		complete = false;
-		
+
+	public int getId() {
+		return id;
 	}
-	
-	public void setId(int id){
+
+	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public int getId(){
-		return  id;
+
+	public String getTitle() {
+		return title;
 	}
-	
-	public void setTitle(String title){
+
+	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	public String getTitle(){
-		return  title;
+
+	public String getDescription() {
+		return description;
 	}
-	
-	public void setDescription(String description){
+
+	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public String getDescription(){
-		return  description;
+
+	public Deadline getDeadline() {
+		return deadline;
 	}
-	
-	public void setDeadline(Deadline deadline){
+
+	public void setDeadline(Deadline deadline) {
 		this.deadline = deadline;
 	}
-	
-	public Deadline getDeadline(){
-		return  deadline;
+
+	public ArrayList<User> getAssignedTo() {
+		return assignedTo;
 	}
-	
-	public void addToAssignedTo(User user){
-		this.assignedTo.add(user);
+
+	public void setAssignedTo(ArrayList<User> assignedTo) {
+		this.assignedTo = assignedTo;
 	}
-	
-	public void removeFromAssignedTo(User user){
-		//This needs to be setup
+
+	public int getCreatedBy() {
+		return createdBy;
 	}
-	
-	public ArrayList<User> getAssignedTo(){
-		return  assignedTo;
+
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
 	}
-	
-	public void setComplete(boolean complete){
-		this.complete = complete;
+
+	public boolean isCompleted() {
+		return completed;
 	}
-	
-	public boolean getComplete(){
-		return  complete;
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
 	}
-	
-	public void makeCompleted(){
-		this.complete = true;
-	}
-	
 }

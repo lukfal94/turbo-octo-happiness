@@ -25,18 +25,18 @@ public class SessionManager {
 		
 		gm.setSessionManager(this);
 		
-		ServerErrorMessage syncStatus = null;
+		ServerErrorMessage syncGroups = null;
 		
 		try {
-			syncStatus = gm.syncGroups();
+			syncGroups = gm.syncGroups();
 		} catch( Exception ex) {
 			
 		}
 		
-		if(syncStatus == ServerErrorMessage.NO_GROUPS) {
+		if(syncGroups == ServerErrorMessage.NO_GROUPS) {
 			setGuiMode(GuiMode.BLANK);
 		}
-		else if(syncStatus == ServerErrorMessage.NO_ERROR) {
+		else if(syncGroups == ServerErrorMessage.NO_ERROR) {
 			// Set the active group to the first group.
 			setActiveGroup(gm.getGroups().get(0));
 			setGuiMode(GuiMode.STANDARD);
@@ -67,5 +67,13 @@ public class SessionManager {
 
 	public void setGuiMode(GuiMode guiMode) {
 		this.guiMode = guiMode;
+	}
+
+	public User getActiveUser() {
+		return activeUser;
+	}
+
+	public void setActiveUser(User activeUser) {
+		this.activeUser = activeUser;
 	}
 }
