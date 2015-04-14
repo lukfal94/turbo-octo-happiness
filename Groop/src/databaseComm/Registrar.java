@@ -1,6 +1,8 @@
 package databaseComm;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 
@@ -71,13 +73,23 @@ public class Registrar {
 		return usr;
 	}
 	
-	public Object addNewTask(Group group, User user, String title, String description, Date deadline, TaskPriority priority)
+	public Object addNewTask(Group group, User user, String title, String description, Date deadline, int priority)
 			throws JsonParseException, JsonMappingException, IOException {
 		Task task = null;
 		ServerResponse response = null;
-		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=0&gid=" + group.getId()
+		URL jsonUrl = null;
+		
+		String urlStr = "http://www.lukefallon.com/groop/api/tasks.php?mode=0&gid=" + group.getId()
 				+ "&uid=" + user.getId() + "&title=" + title + "&desc=" + description 
-				+ "&dline=" + deadline.toString() + "&prior=" + priority.ordinal());
+				+ "&dline=" + deadline.toString() + "&prior=" + priority;
+
+		URL url = new URL(urlStr);
+		try {
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			jsonUrl = uri.toURL();
+		} catch ( Exception ex) {
+			System.out.println("Error parsing url");
+		}
 		
 		try {
 			task = mapper.readValue(jsonUrl, Task.class);
@@ -86,6 +98,7 @@ public class Registrar {
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
 			return response;
 		}
+
 	}
 	
 	public Object getTaskByID(int id) 
@@ -101,5 +114,10 @@ public class Registrar {
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
 			return response;
 		}
+	}
+
+	public Object addNewActivity() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

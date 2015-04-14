@@ -28,10 +28,10 @@ public class UserInfoPanel extends JPanel {
 	}
 	
 	private void initComponents() {
-		fullname = new JLabel(sessionManager.getUser().getFullname());
+		fullname = new JLabel(sessionManager.getActiveUser().getFullname());
 		fullname.setFont(new Font("Sans-Serif", Font.BOLD, 24));
 		
-		username = new JLabel(sessionManager.getUser().getUsername());
+		username = new JLabel(sessionManager.getActiveUser().getUsername());
 		username.setFont(new Font("Sans-Serif", Font.ITALIC, 18));
 		
 		this.add(fullname);

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import util.Activity;
 
 public class ActivityManager {
-	
 	private ArrayList<Activity> activityLog;
 	
 	public ActivityManager() {
@@ -17,5 +16,10 @@ public class ActivityManager {
 	
 	public ArrayList<Activity> getActivityLog() {
 		return activityLog;
+	}
+
+	public void addActivity(Activity newActivity) {
+		// TODO Auto-generated method stub
+		this.activityLog.add(newActivity);
 	}
 }

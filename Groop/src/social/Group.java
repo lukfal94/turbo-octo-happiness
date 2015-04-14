@@ -16,6 +16,11 @@ public class Group {
 	private TaskManager taskManager;
 	private ActivityManager activityManager;
 	
+	public Group() {
+		this.taskManager = new TaskManager();
+		this.activityManager = new ActivityManager();
+		
+	}
 	public int getId() {
 		return this.id;
 	}

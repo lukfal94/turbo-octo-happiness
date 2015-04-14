@@ -14,13 +14,7 @@ public class Activity {
 	private boolean verified;
 	
 	public Activity() {
-		id = 0;
-		user = new User();
-		task = new Task();
-		timeStamp = new Date();
-		timeSpend = 0;
-		description = "";
-		verified = false;
+
 	}
 	
 	public int getId() {
