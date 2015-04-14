@@ -274,6 +274,7 @@ public class GroopMainInterface extends JFrame{
 			if(e.getActionCommand().equals("Group")){
 				mainGui.getGroupInfoPanel().openGroupInfoWindow(GroupWindowMode.NEW_GROUP);
 			}
+			// Switching active groups
 			else if(e.getSource().getClass().equals(GroupMenuItem.class)) {
 				GroupMenuItem gMenuItem = (GroupMenuItem) e.getSource();
 				
@@ -281,6 +282,11 @@ public class GroopMainInterface extends JFrame{
 				if(!gMenuItem.getGroup().equals(sessionManager.getActiveGroup())) {
 					sessionManager.switchGroup(gMenuItem.getGroup());
 					mainGui.refreshInterface();
+					try {
+						sessionManager.getActiveGroup().getTaskManager().syncTasks(gMenuItem.getGroup());
+					} catch(Exception ex) {
+						System.out.println("Error: Could not sync tasks");
+					}
 				} else {
 					try {
 						sessionManager.getGroupManager().syncGroups();
@@ -328,13 +334,11 @@ public class GroopMainInterface extends JFrame{
 	}
 
 	public GroupInfoPanel getGroupInfoPanel() {
-		// TODO Auto-generated method stub
 		return groupInfoPanel;
 	}
 
 	public void refreshInterface() {
 		// TODO Auto-generated method stub
-//		taskPanel.refresh();
 		groupInfoPanel.refresh();
 		menuBar.updateGroupMenu();
 	}

@@ -54,7 +54,7 @@ public class SessionManager {
 		// Tasks
 		for(Group g : gm.getGroups()) {
 			try {
-				syncStatus = g.getTaskManager().syncTasks(g.getId());
+				syncStatus = g.getTaskManager().syncTasks(g);
 			} catch( Exception ex) {
 				System.out.println(">>" + ex);
 				System.out.println("Error: Could not sync tasks for group");

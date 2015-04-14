@@ -42,12 +42,13 @@ public class TaskManager{
 		return activityManager;
 	}
 
-	public ServerErrorMessage syncTasks(int groupID) throws JsonParseException, JsonMappingException, IOException {
+	public ServerErrorMessage syncTasks(Group g) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		ServerResponse response = null;
 		List<Task> tasks = null;
 		
-		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=2&gid=" + groupID);
+		System.out.println("Syncing tasks...");
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=2&gid=" + g.getId());
 
 		try {
 			tasks = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Task>>() { });

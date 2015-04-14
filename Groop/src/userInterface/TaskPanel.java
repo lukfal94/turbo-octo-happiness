@@ -54,6 +54,13 @@ public class TaskPanel extends JPanel{
 		createTaskButton.addActionListener(new TaskWindowButtonClick());
 		createTaskButton.setName("createTaskButton");
 		
+		System.out.println(sessionManager.getActiveGroup().getTaskManager().getTasks().size());
+		
+		for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
+			this.add(new TaskElement(t));
+			System.out.println("Adding " + t);
+		}
+		
 		this.setBackground(Color.CYAN);
 		this.add(createTaskButton);
 	}
@@ -75,7 +82,39 @@ public class TaskPanel extends JPanel{
 	public void openTaskWindow(TaskWindowMode mode) {
 		TaskWindow taskWindow = new TaskWindow(mode);
 	}
-
+	
+	private class TaskElement extends JPanel {
+		private Task task;
+		
+		private JLabel titleLabel;
+		private JLabel descriptionLabel;
+		private JLabel deadlineLabel;
+		private JLabel assignedToLabel;
+		private JComboBox assignedToComboBox;
+		private JButton editButton;
+		
+		private GridBagLayout gbLayout;
+		private GridBagConstraints gbC;
+		
+		public TaskElement(Task t) {
+			this.task = t;
+			
+			initComponents();
+			this.setBackground(Color.GREEN);
+		}
+		
+		private void initComponents() {
+			gbLayout = new GridBagLayout();
+			gbC = new GridBagConstraints();
+			
+			titleLabel = new JLabel(task.getTitle());
+			descriptionLabel = new JLabel(String.format("<html><p style='width: %d;'>%s</p></html>", 200, task.getDescription()));
+			
+			this.add(titleLabel, gbC);
+			this.add(descriptionLabel, gbC);
+		}
+	}
+	
 	private class TaskWindow extends JFrame {
 		private JPanel taskWindowPanel;
 		private TaskWindowMode currMode;
@@ -256,6 +295,11 @@ public class TaskPanel extends JPanel{
 		    gbLayout.setConstraints( aComponent, c );  
 		    aContainer.add( aComponent );  
 		} 
+	}
+
+	public TaskPanel refresh() {
+		// TODO Auto-generated method stub
+		return new TaskPanel(sessionManager);
 	}
 	
 }
