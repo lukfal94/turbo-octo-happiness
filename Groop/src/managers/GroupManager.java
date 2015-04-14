@@ -1,6 +1,7 @@
 package managers;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import social.Group;
 import social.User;
+import util.Task;
 import databaseComm.Registrar;
 import databaseComm.ServerResponse;
 import databaseComm.ServerResponse.ServerErrorMessage;
@@ -35,12 +37,39 @@ public class GroupManager {
 		this.user = sessionManager.getActiveUser();
 	}
 	
+	public Object createGroup(User user, String title, String desc) throws JsonParseException, JsonMappingException, IOException {
+		Group group = null;
+		ServerResponse response = null;
+		URL jsonUrl = null;
+		System.out.println("Creating : " + title);
+
+		String urlStr = "http://www.lukefallon.com/groop/api/groups.php?mode=0&cid=" + user.getId() + "&title=" + title + "&desc=" + desc;
+
+		URL url = new URL(urlStr);
+		try {
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			jsonUrl = uri.toURL();
+		} catch ( Exception ex) {
+			System.out.println("Error parsing url");
+		}
+		System.out.println(jsonUrl.toString());
+		
+		try {
+			group = mapper.readValue(jsonUrl, Group.class);
+			System.out.println("Added a group");
+			return group;
+		} catch(Exception ex) {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response;
+		}
+	}
+	
 	// Returns ServerErrorMessage.NO_ERROR if sync is successful, .NO_GROUPS otherwise.
 	public ServerErrorMessage syncGroups() throws JsonParseException, JsonMappingException, IOException {
 		ServerResponse response = null;
 		List<Group> groups = null;
 		
-		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/groups.php?uid=" + user.getId());
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/groups.php?mode=2&uid=" + user.getId());
 		
 		try {
 			groups = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Group>>() { });
@@ -53,7 +82,11 @@ public class GroupManager {
 			return response.getServerErrorMessage();
 		}
 	}
-
+	
+	public void addGroup(Group g) {
+		this.groups.add(g);
+	}
+	
 	public ArrayList<Group> getGroups() {
 		return groups;
 	}

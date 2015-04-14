@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import databaseComm.ServerResponse.ServerErrorMessage;
 import social.Group;
 import social.User;
+import userInterface.GroopMainInterface;
 import userInterface.GroopMainInterface.GuiMode;
 
 /*
@@ -18,6 +19,8 @@ public class SessionManager {
 	private Group activeGroup;
 	private GuiMode guiMode;
 	private GroupManager gm;
+	
+	private GroopMainInterface mainGUI;
 	
 	public SessionManager(User user) {
 		this.activeUser = user;
@@ -61,6 +64,9 @@ public class SessionManager {
 		}
 	}
 	
+	public GroupManager getGroupManager() {
+		return this.gm;
+	}
 	public ArrayList<Group> getGroups() {
 		return this.gm.getGroups();
 	}
@@ -92,5 +98,15 @@ public class SessionManager {
 	public void switchGroup(Group group) {
 		// TODO Auto-generated method stub
 		this.activeGroup = group;
+	}
+
+	public void refreshSession() {
+		// TODO Auto-generated method stub
+		mainGUI.refreshInterface();
+	}
+
+	public void setMainGUI(GroopMainInterface groopMainInterface) {
+		// TODO Auto-generated method stub
+		this.mainGUI = groopMainInterface;
 	}
 }

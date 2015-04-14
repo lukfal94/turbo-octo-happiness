@@ -213,26 +213,31 @@ public class TaskPanel extends JPanel{
 				sm = TaskPanel.this.sessionManager;
 				Object response = null;
 
-				// Send the new task to the DB.
-				try {
-					response = registrar.addNewTask(sm.getActiveGroup(), sm.getActiveUser(), titleTextField.getText(),
-						descriptionTextArea.getText(), new Date(), priorityComboBox.getSelectedIndex());
-				} catch(Exception ex) {
-					System.out.println(ex);
+				if(e.getSource().equals(submitButton)) {
+					// Send the new task to the DB.
+					try {
+						response = registrar.addNewTask(sm.getActiveGroup(), sm.getActiveUser(), titleTextField.getText(),
+							descriptionTextArea.getText(), new Date(), priorityComboBox.getSelectedIndex());
+					} catch(Exception ex) {
+						System.out.println(ex);
+					}
+					
+					if(response.getClass().equals(ServerResponse.class)) {
+						ServerResponse servResponse = (ServerResponse)response;
+						// TODO Error handling
+					} else if(response.getClass().equals(Task.class)) {
+						Task newTask = (Task)response;
+						sm.getActiveGroup().getTaskManager().addTask(newTask);
+					}
+					
+					System.out.println("Title: "+titleTextField.getText());
+					System.out.println("Descr: "+descriptionTextArea.getText());
+					System.out.println("Deadl: "+deadlineTextField.getText());
+					System.out.println("Prior: "+TaskPriority.values()[priorityComboBox.getSelectedIndex()]);
+					
+					TaskWindow.this.dispose();
 				}
-				
-				if(response.getClass().equals(ServerResponse.class)) {
-					ServerResponse servResponse = (ServerResponse)response;
-					// TODO Error handling
-				} else if(response.getClass().equals(Task.class)) {
-					Task newTask = (Task)response;
-					sm.getActiveGroup().getTaskManager().addTask(newTask);
-				}
-				
-				System.out.println("Title: "+titleTextField.getText());
-				System.out.println("Descr: "+descriptionTextArea.getText());
-				System.out.println("Deadl: "+deadlineTextField.getText());
-				System.out.println("Prior: "+TaskPriority.values()[priorityComboBox.getSelectedIndex()]);
+
 			}
 		}
 		
