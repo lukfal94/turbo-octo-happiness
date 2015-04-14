@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import managers.SessionManager;
@@ -88,7 +89,15 @@ public class GroopMainInterface extends JFrame{
 		private JMenu fileMenu, newMenu, editMenu, groupMenu, switchGroupMenu;
 		private JMenuItem menuItem;
 	
-		public void updateGroupListing() {
+		public void updateGroupMenu() {
+			// Delete old menu
+			menuBar.remove(groupMenu);
+			System.out.println("Deleted old menu");
+			
+			// Build Group menu
+			groupMenu = new JMenu("Group");
+			groupMenu.setMnemonic(KeyEvent.VK_G);
+			
 			switchGroupMenu = new JMenu("Switch to");
 
 			for(Group g : sessionManager.getGroups()) {
@@ -96,7 +105,21 @@ public class GroopMainInterface extends JFrame{
 				menuItem.addActionListener(new MenuActionListener());
 				switchGroupMenu.add(menuItem);
 			}
+			
 			groupMenu.add(switchGroupMenu);
+			
+			menuItem = new JMenuItem("Invite User");
+			menuItem.addActionListener(new MenuActionListener());
+			groupMenu.add(menuItem);
+			
+			menuItem = new JMenuItem("Delete Group");
+			menuItem.addActionListener(new MenuActionListener());
+			
+			System.out.println("Constructed new menu");
+			
+			groupMenu.add(menuItem);
+			
+			menuBar.add(groupMenu);
 		}
 		
 		public void initMenuBar() {
@@ -259,18 +282,42 @@ public class GroopMainInterface extends JFrame{
 					sessionManager.switchGroup(gMenuItem.getGroup());
 					mainGui.refreshInterface();
 				} else {
-					mainGui.refreshInterface();
+					try {
+						sessionManager.getGroupManager().syncGroups();
+					} catch(Exception ex) {
+						System.out.println("Error: Could not sync groups");
+					}
+					GroopMainInterface.this.groupInfoPanel.refresh();
 				}
 				
 			}
 			// NEED TO CHECK FOR ACTIVE GROUP OR DISABLE MENU BUTTONS
-			if(e.getActionCommand().equals("Task")) {
+			else if(e.getActionCommand().equals("Task")) {
 				// Launch the new task window
 				mainGui.getTaskPanel().openTaskWindow(TaskWindowMode.NEW_TASK);
 				
 				//GroopMainInterface.this.sessionManager.getActiveGroup().getTaskManager()
 				
 				// taskPanel.refresh();
+			} 
+			else if(e.getActionCommand().equals("Delete Group")) {
+				int n = JOptionPane.showConfirmDialog(GroopMainInterface.this, "<html><p style='width: 300px;'>Are you sure you wish to delete: \"" + sessionManager.getActiveGroup().getName() 
+						+ "\"? This action can not be undone!</html></p>",
+						"Delete Group", JOptionPane.YES_NO_OPTION);
+				if(n == 0) {
+					// Delete the group from the database and local record
+					try {
+						sessionManager.getGroupManager().deleteGroup(sessionManager.getActiveGroup());
+					} catch(Exception ex) {
+						System.out.println("Error: Could not delete group." + ex);
+						return;
+					}
+					// Change the active group
+					sessionManager.setActiveGroup(sessionManager.getGroups().get(0));
+					
+					// Refresh the interface
+					GroopMainInterface.this.refreshInterface();
+				}
 			}
 
 		}
@@ -289,7 +336,7 @@ public class GroopMainInterface extends JFrame{
 		// TODO Auto-generated method stub
 //		taskPanel.refresh();
 		groupInfoPanel.refresh();
-		menuBar.updateGroupListing();
+		menuBar.updateGroupMenu();
 	}
 
 	public void setTaskPanel(TaskPanel taskPanel) {

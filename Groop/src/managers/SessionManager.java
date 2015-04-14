@@ -49,8 +49,6 @@ public class SessionManager {
 			// Set the active group to the first group.
 			setActiveGroup(gm.getGroups().get(0));
 			setGuiMode(GuiMode.STANDARD);
-			
-			System.out.println(gm.getGroups().get(0).getName());
 		}
 		
 		// Tasks

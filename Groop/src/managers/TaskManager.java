@@ -48,8 +48,7 @@ public class TaskManager{
 		List<Task> tasks = null;
 		
 		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=2&gid=" + groupID);
-		
-		System.out.println(jsonUrl);
+
 		try {
 			tasks = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Task>>() { });
 			

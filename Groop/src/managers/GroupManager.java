@@ -41,7 +41,6 @@ public class GroupManager {
 		Group group = null;
 		ServerResponse response = null;
 		URL jsonUrl = null;
-		System.out.println("Creating : " + title);
 
 		String urlStr = "http://www.lukefallon.com/groop/api/groups.php?mode=0&cid=" + user.getId() + "&title=" + title + "&desc=" + desc;
 
@@ -56,7 +55,6 @@ public class GroupManager {
 		
 		try {
 			group = mapper.readValue(jsonUrl, Group.class);
-			System.out.println("Added a group");
 			return group;
 		} catch(Exception ex) {
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
@@ -73,7 +71,6 @@ public class GroupManager {
 		
 		try {
 			groups = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Group>>() { });
-			
 			this.groups = (ArrayList<Group>) groups;
 			return ServerErrorMessage.NO_ERROR;
 		} catch (Exception ex) {
@@ -93,6 +90,29 @@ public class GroupManager {
 
 	public void setGroups(ArrayList<Group> groups) {
 		this.groups = groups;
+	}
+
+	public ServerErrorMessage deleteGroup(Group g) throws JsonParseException, JsonMappingException, IOException {
+		// TODO Auto-generated method stub
+		ServerResponse response = null;
+		
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/groups.php?mode=4&gid=" + g.getId());
+		
+		System.out.println(jsonUrl);
+		
+		try {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+		} catch (Exception ex) {
+			System.out.println(ex);
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response.getServerErrorMessage();
+		}
+		
+		if(response.getServerErrorMessage() == ServerErrorMessage.NO_ERROR) {
+			this.getGroups().remove(g);
+		}
+			
+		return response.getServerErrorMessage();
 	}
 
 }
