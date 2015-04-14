@@ -158,7 +158,6 @@ public class RegisterWindow extends JFrame{
 					System.out.println(ex);
 				}
 				
-				if(registrarResponse == null) System.out.println("Uh oh");
 				// reg.registerUser returns User.class on successful registration
 				if(registrarResponse.getClass().equals(User.class)) {
 					
@@ -183,6 +182,9 @@ public class RegisterWindow extends JFrame{
 					}
 					else if(serverResponse.getServerErrorMessage() == ServerErrorMessage.DATABASE_CONN) {
 						msgLabel.setText("Error connecting to database. Try again.");
+					}
+					else if(serverResponse.getServerErrorMessage() == ServerErrorMessage.NO_GROUPS) {
+						
 					}
 					else {
 						msgLabel.setText("Unspecified error. Try again.");

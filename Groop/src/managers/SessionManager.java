@@ -42,6 +42,7 @@ public class SessionManager {
 		} catch( Exception ex) {
 			System.out.println("Error: Could not sync groups");
 		}
+		
 		if(syncStatus == ServerErrorMessage.NO_GROUPS) {
 			setGuiMode(GuiMode.BLANK);
 		}
@@ -49,15 +50,15 @@ public class SessionManager {
 			// Set the active group to the first group.
 			setActiveGroup(gm.getGroups().get(0));
 			setGuiMode(GuiMode.STANDARD);
-		}
-		
-		// Tasks
-		for(Group g : gm.getGroups()) {
-			try {
-				syncStatus = g.getTaskManager().syncTasks(g);
-			} catch( Exception ex) {
-				System.out.println(">>" + ex);
-				System.out.println("Error: Could not sync tasks for group");
+			
+			// Tasks
+			for(Group g : gm.getGroups()) {
+				try {
+					syncStatus = g.getTaskManager().syncTasks(g);
+				} catch( Exception ex) {
+					System.out.println(">>" + ex);
+					System.out.println("Error: Could not sync tasks for group");
+				}
 			}
 		}
 	}

@@ -26,6 +26,7 @@ public class GroupManager {
 	
 	public GroupManager() {
 		mapper = new ObjectMapper();
+		groups = new ArrayList<Group>();
 	}
 	
 	public SessionManager getSessionManager() {
@@ -74,7 +75,7 @@ public class GroupManager {
 			this.groups = (ArrayList<Group>) groups;
 			return ServerErrorMessage.NO_ERROR;
 		} catch (Exception ex) {
-			System.out.println(ex);
+			System.out.println(">>" + ex);
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
 			return response.getServerErrorMessage();
 		}

@@ -33,6 +33,7 @@ import databaseComm.Registrar;
 import databaseComm.ServerResponse;
 import managers.SessionManager;
 import social.User;
+import userInterface.GroopMainInterface.GuiMode;
 import util.Task;
 import util.Task.TaskPriority;
 
@@ -54,11 +55,14 @@ public class TaskPanel extends JPanel{
 		createTaskButton.addActionListener(new TaskWindowButtonClick());
 		createTaskButton.setName("createTaskButton");
 		
-		System.out.println(sessionManager.getActiveGroup().getTaskManager().getTasks().size());
-		
-		for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
-			this.add(new TaskElement(t));
-			System.out.println("Adding " + t);
+		if(sessionManager.getGuiMode() == GuiMode.STANDARD) {
+			// Populate the tasks
+			System.out.println(sessionManager.getActiveGroup().getTaskManager().getTasks().size());
+			
+			for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
+				this.add(new TaskElement(t));
+				System.out.println("Adding " + t);
+			}
 		}
 		
 		this.setBackground(Color.CYAN);

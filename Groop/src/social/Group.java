@@ -19,7 +19,6 @@ public class Group {
 	public Group() {
 		this.taskManager = new TaskManager();
 		this.activityManager = new ActivityManager();
-		
 	}
 	public int getId() {
 		return this.id;
