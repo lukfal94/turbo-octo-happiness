@@ -31,6 +31,7 @@ public class GroupInfoPanel extends JPanel {
 	private JLabel groupDescription;
 	
 	// Layout
+	//Nelson is Testing here.
 	private GridBagLayout gbLayout;
 	private GridBagConstraints gbC;
 	
