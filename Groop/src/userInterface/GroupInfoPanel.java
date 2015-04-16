@@ -44,10 +44,23 @@ public class GroupInfoPanel extends JPanel {
 		
 		if(sessionManager.getGuiMode() == GuiMode.STANDARD)
 			initComponents();
+		if(sessionManager.getGuiMode() == GuiMode.BLANK)
+			initBlankComponents();
 		
 		this.setBackground(Color.BLUE);
 	}
 	
+	private void initBlankComponents() {
+		// TODO Auto-generated method stub
+		groupName = new JLabel("");
+		groupName.setFont(new Font("Serif", Font.PLAIN, 24));
+		
+		groupDescription = new JLabel("");
+		
+		this.add(groupName);
+		this.add(groupDescription);
+	}
+
 	private void initComponents() {
 		groupName = new JLabel(sessionManager.getActiveGroup().getName());
 		groupName.setFont(new Font("Serif", Font.PLAIN, 24));
