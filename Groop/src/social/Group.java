@@ -1,12 +1,12 @@
 package social;
 
 import managers.ActivityManager;
+import managers.EventManager;
 import managers.SessionManager;
 import managers.TaskManager;
 
 public class Group {
 	private int id;
-	private int creatorID;
 	private User creator;
 	private String name;
 	private String description;
@@ -15,10 +15,12 @@ public class Group {
 	
 	private TaskManager taskManager;
 	private ActivityManager activityManager;
+	private EventManager eventManager;
 	
 	public Group() {
 		this.taskManager = new TaskManager();
 		this.activityManager = new ActivityManager();
+		this.eventManager = new EventManager();
 	}
 	public int getId() {
 		return this.id;
@@ -83,13 +85,4 @@ public class Group {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public int getCreatorID() {
-		return creatorID;
-	}
-
-	public void setCreatorID(int creatorID) {
-		this.creatorID = creatorID;
-	}
-	
 }
