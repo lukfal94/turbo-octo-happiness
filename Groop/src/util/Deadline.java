@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
-public class Deadline{
+public class Deadline extends Event {
 	
 	private String dueDate;
 	private String priority;
