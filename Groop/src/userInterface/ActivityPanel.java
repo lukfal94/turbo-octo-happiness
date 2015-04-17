@@ -298,7 +298,7 @@ public class ActivityPanel extends JPanel{
 					JOptionPane.showMessageDialog(null, "Please give a description.", "No Description", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
-				else if (timeSpentSpinner.getValue() < 1) {
+				else if ((int) timeSpentSpinner.getValue() < 1) {
 					JOptionPane.showMessageDialog(null, "Please give an amount of time.", "No Time Spent", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
@@ -310,7 +310,7 @@ public class ActivityPanel extends JPanel{
 							response = registrar.addNewActivity();
 						else
 							// TODO: add editActivity function to registrar
-							response = registrar.editActivity();
+							// response = registrar.editActivity();
 					} catch(Exception ex) {
 						System.out.println(ex);
 					}
