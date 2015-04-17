@@ -1,5 +1,6 @@
 package userInterface;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -7,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +28,6 @@ import databaseComm.ServerResponse.ServerErrorMessage;
 //
 public class LoginWindow extends JFrame{
 	private Registrar registrar;
-	
 	private JPanel loginPanel;
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
@@ -39,17 +40,25 @@ public class LoginWindow extends JFrame{
 	private GridLayout gLayout;
 	private GridBagConstraints c;
 	
+	private Color backgroundColor;
+	
+	private String logoPath = "/Users/lukefallon/Desktop/turbo-octo-happiness/Groop/img/groop_logo.png";
+	private ImageIcon logoImage;
+	private JLabel logoLabel;
+	
 	public LoginWindow() {
 		initComponents();
 	}
 	
 	private void initComponents() {
 		registrar = new Registrar();
+		backgroundColor = new Color(129, 205, 234);
 		
 		this.setTitle("Login or Sign Up");
-		
 		this.setSize(300, 400);
+		this.setBackground(backgroundColor);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLayout(new BorderLayout());
 		
 		// Center the frame in the screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -59,10 +68,12 @@ public class LoginWindow extends JFrame{
 		gLayout = new GridLayout(0, 1);
 		c = new GridBagConstraints();
 		
-		this.setLayout(gbLayout);
+		
 		
 		loginPanel = new JPanel();
 		loginPanel.setLayout(gLayout);
+		loginPanel.setMinimumSize(new Dimension(300, 400));
+		loginPanel.setBackground(backgroundColor);
 		
 		msgLabel = new JLabel();
 		msgLabel.setForeground(Color.RED);
@@ -85,6 +96,14 @@ public class LoginWindow extends JFrame{
 //		this.addComponent(0, 4, 2, 1, c, this, passwordTextField);
 //		this.addComponent(0, 5, 2, 1, c, this, loginButton);
 		
+		logoImage = resizeImage(new ImageIcon(logoPath), 300, 200);
+		System.out.println(logoImage.toString());
+		logoLabel = new JLabel(logoImage);
+		System.out.println(logoLabel.getBackground());
+		logoLabel.setBackground(backgroundColor);
+		System.out.println(logoLabel.getBackground());
+		
+		
 		loginPanel.add(usernameLabel);
 		loginPanel.add(usernameTextField);
 		loginPanel.add(passwordLabel);
@@ -92,6 +111,7 @@ public class LoginWindow extends JFrame{
 		loginPanel.add(loginButton);
 		loginPanel.add(msgLabel);
 		
+		this.add(logoLabel, BorderLayout.NORTH);
 		this.add(loginPanel);
 		
 		//this.getRootPane().setDefaultButton(loginButton);
@@ -99,6 +119,16 @@ public class LoginWindow extends JFrame{
 		this.setVisible(true);
 	}
 	
+    // Resizes an image
+    private ImageIcon resizeImage(ImageIcon icon, int x, int y)
+    {
+        // TODO: Resize an image to a desired dimension.
+        Image image = icon.getImage();
+        Image newImage = image.getScaledInstance(x, y, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(newImage);
+        return icon;
+    }
+    
 	private class LoginButtonPress implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {

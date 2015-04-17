@@ -1,24 +1,63 @@
 package social;
 
+import java.net.URL;
+import java.util.ArrayList;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import databaseComm.ServerResponse;
 import managers.ActivityManager;
+import managers.EventManager;
 import managers.SessionManager;
 import managers.TaskManager;
 
 public class Group {
 	private int id;
-	private int creatorID;
 	private User creator;
 	private String name;
 	private String description;
-	private User[] members;
-	private User[] admins;
+	private ArrayList<User> members;
+	private ArrayList<User> admins;
 	
 	private TaskManager taskManager;
 	private ActivityManager activityManager;
+	private EventManager eventManager;
 	
 	public Group() {
 		this.taskManager = new TaskManager();
 		this.activityManager = new ActivityManager();
+		this.eventManager = new EventManager();
+	}
+	
+	// Queries the server to update its listing of members
+	public void syncMembers() {
+		// TODO Auto-generated method stub
+		ServerResponse response = null;
+		ArrayList<User> users = null;
+		ObjectMapper mapper = new ObjectMapper();
+		
+		URL jsonUrl;
+		
+		try {
+			jsonUrl = new URL("http://www.lukefallon.com/groop/api/groups.php?mode=2&gid=" + this.id);
+		} catch(Exception ex) {
+			System.out.println(ex);
+			return;
+		}
+		
+		try {
+			users = mapper.readValue(jsonUrl, new TypeReference<ArrayList<User>>() { });
+			this.members = (ArrayList<User>) users;
+			System.out.println("syncMembers() successful " + jsonUrl);
+			System.out.println("?! " + this.members.size());
+		} catch(Exception ex) {
+			try {
+				response = mapper.readValue(jsonUrl, ServerResponse.class);
+			} catch (Exception ex2) {
+				System.out.println(ex);
+			}
+		}
 	}
 	public int getId() {
 		return this.id;
@@ -64,32 +103,33 @@ public class Group {
 		this.description = description;
 	}
 
-	public User[] getMembers() {
-		return members;
-	}
 
-	public void setMembers(User[] members) {
-		this.members = members;
-	}
-
-	public User[] getAdmins() {
-		return admins;
-	}
-
-	public void setAdmins(User[] admins) {
-		this.admins = admins;
-	}
 
 	public void setId(int id) {
 		this.id = id;
 	}
 
-	public int getCreatorID() {
-		return creatorID;
+	public ArrayList<User> getMembers() {
+		return members;
 	}
 
-	public void setCreatorID(int creatorID) {
-		this.creatorID = creatorID;
+	public void setMembers(ArrayList<User> members) {
+		this.members = members;
 	}
-	
+
+	public ArrayList<User> getAdmins() {
+		return admins;
+	}
+
+	public void setAdmins(ArrayList<User> admins) {
+		this.admins = admins;
+	}
+
+	public EventManager getEventManager() {
+		return eventManager;
+	}
+
+	public void setEventManager(EventManager eventManager) {
+		this.eventManager = eventManager;
+	}
 }
