@@ -124,19 +124,20 @@ public class GroupInfoPanel extends JPanel {
 			// Init layout tools
 			gbLayout = new GridBagLayout();
 			gbC = new GridBagConstraints();
+			gbC.gridwidth = GridBagConstraints.REMAINDER;
+			gbC.gridheight = 5;
 			
-			gbC.fill = GridBagConstraints.BOTH;
+			//gbC.fill = GridBagConstraints.BOTH;
+			windowPanel.setLayout(new FlowLayout());
+			this.add(windowPanel);
 			
-			windowPanel.setLayout(new GridBagLayout());
-			
-			nameLabel = new JLabel("Name");
-			descriptionLabel= new JLabel("Description");
+			nameLabel = new JLabel("Group Name");
+			descriptionLabel= new JLabel("Group Description");
 			
 			nameTextField = new JTextField(20);
 			descriptionTextArea = new JTextArea(3, 40);
 			descriptionTextArea.setLineWrap(true);
 			descriptionTextArea.setWrapStyleWord(true);
-			GroupList = new JComboBox();
 			
 			createButton = new JButton("Create");
 			createButton.addActionListener(new CreateButtonPress());
@@ -147,13 +148,13 @@ public class GroupInfoPanel extends JPanel {
 			windowPanel.add(descriptionTextArea);
 			windowPanel.add(createButton);
 			
-			GroupInfoPanel.this.addComponent(0, 0, 2, 1, gbC, windowPanel, nameLabel);
-			GroupInfoPanel.this.addComponent(4, 0, 5, 1, gbC, windowPanel, nameTextField);
-			GroupInfoPanel.this.addComponent(1, 0, 3, 1, gbC, windowPanel, descriptionLabel);
-			GroupInfoPanel.this.addComponent(1, 3, 5, 2, gbC, windowPanel, descriptionTextArea);
-			GroupInfoPanel.this.addComponent(4, 3, 3, 1, gbC, windowPanel, createButton);
+			GroupInfoPanel.this.addComponent(2, 2, 5, 5, gbC, windowPanel, nameLabel);
+			GroupInfoPanel.this.addComponent(2, 3, 5, 5, gbC, windowPanel, nameTextField);
+			GroupInfoPanel.this.addComponent(3, 2, 5, 5, gbC, windowPanel, descriptionLabel);
+			GroupInfoPanel.this.addComponent(3, 3, 5, 5, gbC, windowPanel, descriptionTextArea);
+			GroupInfoPanel.this.addComponent(4, 3, 5, 5, gbC, windowPanel, createButton);
 			
-			this.add(windowPanel);
+
 			
 		}
 		
@@ -201,6 +202,10 @@ public class GroupInfoPanel extends JPanel {
 		Group activeGroup = sessionManager.getActiveGroup();
 		this.groupName.setText(activeGroup.getName());
 		this.groupDescription.setText(activeGroup.getDescription());
+		ArrayList<String> GroupNames = new ArrayList<String>();
+		int max = (sessionManager.getGroups().size());
+		for(int i = 0; i < max; i++)
+			GroupList.addItem(sessionManager.getGroups().get(i).getName());
 	}
 }
 
