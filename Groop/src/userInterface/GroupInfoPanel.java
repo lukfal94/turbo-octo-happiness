@@ -18,17 +18,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 
 import databaseComm.ServerResponse;
 import social.Group;
 import userInterface.GroopMainInterface.GuiMode;
 import managers.SessionManager;
 
+import java.util.ArrayList;
+import java.util.Vector;
+
 public class GroupInfoPanel extends JPanel {
 	private SessionManager sessionManager;
 
 	private JLabel groupName;
 	private JLabel groupDescription;
+	private JComboBox GroupList;
 	
 	// Layout
 	//Nelson is Testing here.
@@ -47,7 +52,7 @@ public class GroupInfoPanel extends JPanel {
 		if(sessionManager.getGuiMode() == GuiMode.BLANK)
 			initBlankComponents();
 		
-		this.setBackground(Color.BLUE);
+		this.setBackground(Color.WHITE);
 	}
 	
 	private void initBlankComponents() {
@@ -66,9 +71,17 @@ public class GroupInfoPanel extends JPanel {
 		groupName.setFont(new Font("Serif", Font.PLAIN, 24));
 		
 		groupDescription = new JLabel(sessionManager.getActiveGroup().getDescription());
+		GroupList = new JComboBox();
+		
+		ArrayList<String> GroupNames = new ArrayList<String>();
+		int max = (sessionManager.getGroups().size());
+		for(int i = 0; i < max; i++)
+			GroupList.addItem(sessionManager.getGroups().get(i).getName());
+		
 		
 		this.add(groupName);
 		this.add(groupDescription);
+		this.add(GroupList);
 	}
 	
 	public void openGroupInfoWindow(GroupWindowMode mode) {
@@ -110,7 +123,7 @@ public class GroupInfoPanel extends JPanel {
 			gbLayout = new GridBagLayout();
 			gbC = new GridBagConstraints();
 			
-			gbC.fill = GridBagConstraints.BOTH;
+			gbC.fill = GridBagConstraints.HORIZONTAL;
 			
 			windowPanel.setLayout(new GridLayout());
 			
@@ -121,6 +134,7 @@ public class GroupInfoPanel extends JPanel {
 			descriptionTextArea = new JTextArea(3, 40);
 			descriptionTextArea.setLineWrap(true);
 			descriptionTextArea.setWrapStyleWord(true);
+			GroupList = new JComboBox();
 			
 			createButton = new JButton("Create");
 			createButton.addActionListener(new CreateButtonPress());
@@ -131,11 +145,11 @@ public class GroupInfoPanel extends JPanel {
 			windowPanel.add(descriptionTextArea);
 			windowPanel.add(createButton);
 			
-//			GroupInfoPanel.this.addComponent(0, 0, 2, 1, gbC, windowPanel, nameLabel);
-//			GroupInfoPanel.this.addComponent(2, 0, 5, 1, gbC, windowPanel, nameTextField);
-//			GroupInfoPanel.this.addComponent(0, 1, 3, 1, gbC, windowPanel, descriptionLabel);
-//			GroupInfoPanel.this.addComponent(3, 1, 5, 2, gbC, windowPanel, descriptionTextArea);
-//			GroupInfoPanel.this.addComponent(1, 3, 3, 1, gbC, windowPanel, createButton);
+			GroupInfoPanel.this.addComponent(0, 0, 2, 1, gbC, windowPanel, nameLabel);
+			GroupInfoPanel.this.addComponent(2, 0, 5, 1, gbC, windowPanel, nameTextField);
+			GroupInfoPanel.this.addComponent(0, 1, 3, 1, gbC, windowPanel, descriptionLabel);
+			GroupInfoPanel.this.addComponent(3, 1, 5, 2, gbC, windowPanel, descriptionTextArea);
+			GroupInfoPanel.this.addComponent(1, 3, 3, 1, gbC, windowPanel, createButton);
 			
 			this.add(windowPanel);
 			
