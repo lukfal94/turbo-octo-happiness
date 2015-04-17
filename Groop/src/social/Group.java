@@ -51,8 +51,7 @@ public class Group {
 		try {
 			users = mapper.readValue(jsonUrl, new TypeReference<ArrayList<User>>() { });
 			this.members = (ArrayList<User>) users;
-			System.out.println("syncMembers() successful " + jsonUrl);
-			System.out.println("?! " + this.members.size());
+			System.out.println("syncMembers() successful ");
 		} catch(Exception ex) {
 			try {
 				response = mapper.readValue(jsonUrl, ServerResponse.class);
