@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +27,6 @@ import userInterface.GroopMainInterface.GuiMode;
 import managers.SessionManager;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class GroupInfoPanel extends JPanel {
 	private SessionManager sessionManager;
@@ -70,12 +68,12 @@ public class GroupInfoPanel extends JPanel {
 	}
 
 	private void initComponents() {
-		groupName = new JLabel(sessionManager.getActiveGroup().getName());
+		groupName = new JLabel("Group Name: " + sessionManager.getActiveGroup().getName());
 		groupName.setFont(new Font("Serif", Font.PLAIN, 24));
 		
-		groupDescription = new JLabel(sessionManager.getActiveGroup().getDescription());
+		groupDescription = new JLabel("Group Description: " + sessionManager.getActiveGroup().getDescription());
 		GroupList = new JComboBox();
-		GroupList.setFont(new Font("Serif", Font.PLAIN, 32));
+		GroupList.setFont(new Font("Serif", Font.PLAIN, 24));
 		
 		ArrayList<String> GroupNames = new ArrayList<String>();
 		int max = (sessionManager.getGroups().size());
@@ -83,8 +81,18 @@ public class GroupInfoPanel extends JPanel {
 			GroupList.addItem(sessionManager.getGroups().get(i).getName());
 		
 		this.setLayout(new GridLayout(3, 3));
+//		gbC = new GridBagConstraints();
+//		gbC.gridx = 0;
+//		gbC.gridy = 0;
+//		gbC.gridwidth = 0;
+//		gbC.gridheight = 3;
 		this.add(groupName);
+		
+//		gbC.gridx = 1;
+//		gbC.gridy = 0;
 		this.add(groupDescription);
+//		gbC.gridx = 2;
+//		gbC.gridy = 0;
 		this.add(GroupList);
 	}
 	
@@ -144,11 +152,11 @@ public class GroupInfoPanel extends JPanel {
 			createButton = new JButton("Create");
 			createButton.addActionListener(new CreateButtonPress());
 			
-			windowPanel.add(nameLabel);
-			windowPanel.add(nameTextField);
-			windowPanel.add(descriptionLabel);
-			windowPanel.add(descriptionTextArea);
-			windowPanel.add(createButton);
+			windowPanel.add(nameLabel, gbC);
+			windowPanel.add(nameTextField, gbC);
+			windowPanel.add(descriptionLabel, gbC);
+			windowPanel.add(descriptionTextArea, gbC);
+			windowPanel.add(createButton, gbC);
 			
 			GroupInfoPanel.this.addComponent(2, 2, 5, 5, gbC, windowPanel, nameLabel);
 			GroupInfoPanel.this.addComponent(2, 3, 5, 5, gbC, windowPanel, nameTextField);
@@ -202,12 +210,8 @@ public class GroupInfoPanel extends JPanel {
 	public void refresh() {
 		// TODO Auto-generated method stub
 		Group activeGroup = sessionManager.getActiveGroup();
-		this.groupName.setText(activeGroup.getName());
-		this.groupDescription.setText(activeGroup.getDescription());
-		ArrayList<String> GroupNames = new ArrayList<String>();
-		int max = (sessionManager.getGroups().size());
-		for(int i = 0; i < max; i++)
-			GroupList.addItem(sessionManager.getGroups().get(i).getName());
+		this.groupName.setText("Group Name: " + activeGroup.getName());
+		this.groupDescription.setText("Group Description: " + activeGroup.getDescription());
 	}
 }
 
