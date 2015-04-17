@@ -308,7 +308,7 @@ public class ActivityPanel extends JPanel{
 					try {
 						if (currMode == ActivityWindowMode.NEW_ACTIVITY)
 							response = registrar.addNewActivity();
-						else
+						//else
 							// TODO: add editActivity function to registrar
 							// response = registrar.editActivity();
 					} catch(Exception ex) {
