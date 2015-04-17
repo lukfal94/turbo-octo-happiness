@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -57,11 +58,12 @@ public class GroupInfoPanel extends JPanel {
 	
 	private void initBlankComponents() {
 		// TODO Auto-generated method stub
+		
 		groupName = new JLabel("");
 		groupName.setFont(new Font("Serif", Font.PLAIN, 24));
 		
 		groupDescription = new JLabel("");
-		
+		this.setLayout(new GridBagLayout());
 		this.add(groupName);
 		this.add(groupDescription);
 	}
@@ -78,7 +80,7 @@ public class GroupInfoPanel extends JPanel {
 		for(int i = 0; i < max; i++)
 			GroupList.addItem(sessionManager.getGroups().get(i).getName());
 		
-		
+		this.setLayout(new GridBagLayout());
 		this.add(groupName);
 		this.add(groupDescription);
 		this.add(GroupList);
@@ -123,9 +125,9 @@ public class GroupInfoPanel extends JPanel {
 			gbLayout = new GridBagLayout();
 			gbC = new GridBagConstraints();
 			
-			gbC.fill = GridBagConstraints.HORIZONTAL;
+			gbC.fill = GridBagConstraints.BOTH;
 			
-			windowPanel.setLayout(new GridLayout());
+			windowPanel.setLayout(new GridBagLayout());
 			
 			nameLabel = new JLabel("Name");
 			descriptionLabel= new JLabel("Description");
@@ -146,10 +148,10 @@ public class GroupInfoPanel extends JPanel {
 			windowPanel.add(createButton);
 			
 			GroupInfoPanel.this.addComponent(0, 0, 2, 1, gbC, windowPanel, nameLabel);
-			GroupInfoPanel.this.addComponent(2, 0, 5, 1, gbC, windowPanel, nameTextField);
-			GroupInfoPanel.this.addComponent(0, 1, 3, 1, gbC, windowPanel, descriptionLabel);
-			GroupInfoPanel.this.addComponent(3, 1, 5, 2, gbC, windowPanel, descriptionTextArea);
-			GroupInfoPanel.this.addComponent(1, 3, 3, 1, gbC, windowPanel, createButton);
+			GroupInfoPanel.this.addComponent(4, 0, 5, 1, gbC, windowPanel, nameTextField);
+			GroupInfoPanel.this.addComponent(1, 0, 3, 1, gbC, windowPanel, descriptionLabel);
+			GroupInfoPanel.this.addComponent(1, 3, 5, 2, gbC, windowPanel, descriptionTextArea);
+			GroupInfoPanel.this.addComponent(4, 3, 3, 1, gbC, windowPanel, createButton);
 			
 			this.add(windowPanel);
 			
