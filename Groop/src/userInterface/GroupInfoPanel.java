@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -74,13 +75,14 @@ public class GroupInfoPanel extends JPanel {
 		
 		groupDescription = new JLabel(sessionManager.getActiveGroup().getDescription());
 		GroupList = new JComboBox();
+		GroupList.setFont(new Font("Serif", Font.PLAIN, 32));
 		
 		ArrayList<String> GroupNames = new ArrayList<String>();
 		int max = (sessionManager.getGroups().size());
 		for(int i = 0; i < max; i++)
 			GroupList.addItem(sessionManager.getGroups().get(i).getName());
 		
-		this.setLayout(new GridBagLayout());
+		this.setLayout(new GridLayout(3, 3));
 		this.add(groupName);
 		this.add(groupDescription);
 		this.add(GroupList);
