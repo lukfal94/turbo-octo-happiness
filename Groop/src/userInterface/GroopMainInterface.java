@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import managers.SessionManager;
 import social.Group;
 import social.User;
+import userInterface.ActivityPanel.ActivityWindowMode;
 import userInterface.CalendarPanel.EventWindowMode;
 import userInterface.GroupInfoPanel.GroupWindowMode;
 import userInterface.TaskPanel.TaskWindowMode;
@@ -311,6 +312,9 @@ public class GroopMainInterface extends JFrame{
 				
 				// taskPanel.refresh();
 			} 
+			else if(e.getActionCommand().equals("Activity")) {
+				mainGui.getActivityPanel().openActivityWindow(ActivityWindowMode.NEW_ACTIVITY);
+			}
 			else if(e.getActionCommand().equals("Event")) {
 				mainGui.getCalendarPanel().openEventWindow(EventWindowMode.CREATE_EVENT);
 			}
@@ -339,6 +343,11 @@ public class GroopMainInterface extends JFrame{
 	
 	public TaskPanel getTaskPanel() {
 		return taskPanel;
+	}
+
+	public ActivityPanel getActivityPanel() {
+		// TODO Auto-generated method stub
+		return this.activityPanel;
 	}
 
 	public CalendarPanel getCalendarPanel() {
