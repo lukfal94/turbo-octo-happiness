@@ -69,9 +69,11 @@ public class ActivityPanel extends JPanel{
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 		
 		// iterate and add each activity to list
-		for (Activity a : sessionManager.getActiveGroup().getActivityManager().getActivityLog()) {
-			
-			listModel.addElement(a.getTask().getTitle() + " - " + a.getUser().getFullname() + ": " + dateFormat.format(a.getTimeStamp()));
+		if (sessionManager.getActiveGroup() != null) {
+			for (Activity a : sessionManager.getActiveGroup().getActivityManager().getActivityLog()) {
+				
+				listModel.addElement(a.getTask().getTitle() + " - " + a.getUser().getFullname() + ": " + dateFormat.format(a.getTimeStamp()));
+			}
 		}
 		
 		activityList = new JList<String>(listModel);
