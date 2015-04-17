@@ -207,6 +207,7 @@ public class ActivityPanel extends JPanel{
 			for(Task t : sessionManager.getActiveUser().getAssignedTasks()) {
 				taskComboBox.addItem(t);
 			}
+			timeSpentSpinner = new JSpinner();
 			
 			submitButton = new JButton("Submit");
 			submitButton.addActionListener(new SubmitButtonPress());
