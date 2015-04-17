@@ -40,6 +40,7 @@ public class SessionManager {
 		try {
 			syncStatus = gm.syncGroups();
 		} catch( Exception ex) {
+			System.out.println(ex);
 			System.out.println("Error: Could not sync groups");
 		}
 		

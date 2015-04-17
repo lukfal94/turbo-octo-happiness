@@ -73,8 +73,14 @@ public class GroupManager {
 		try {
 			groups = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Group>>() { });
 			this.groups = (ArrayList<Group>) groups;
+			
+			for(Group g : this.groups) {
+				g.syncMembers();
+			}
+			
 			return ServerErrorMessage.NO_ERROR;
 		} catch (Exception ex) {
+			System.out.println(">> " + ex);
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
 			return response.getServerErrorMessage();
 		}
