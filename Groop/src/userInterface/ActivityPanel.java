@@ -45,7 +45,7 @@ import databaseComm.ServerResponse;
 public class ActivityPanel extends JPanel{
 	SessionManager sessionManager;
 	
-	private JLabel testLabel;
+	private JLabel testLabel; // not sure if this is still needed, kept it just in case
 	private JButton createActivityButton;
 	private JButton editActivityButton;
 	private JList<String> activityList;
@@ -64,8 +64,11 @@ public class ActivityPanel extends JPanel{
 		editActivityButton = new JButton("Edit");
 		editActivityButton.addActionListener(new ActivityWindowButtonClick());
 		
+		// store list of activites in a JList to be displayed, but because we need to edit, they must be stored in a listmodel
 		listModel = new DefaultListModel<String>();
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+		
+		// iterate and add each activity to list
 		for (Activity a : sessionManager.getActiveGroup().getActivityManager().getActivityLog()) {
 			
 			listModel.addElement(a.getTask().getTitle() + " - " + a.getUser().getFullname() + ": " + dateFormat.format(a.getTimeStamp()));
@@ -91,18 +94,31 @@ public class ActivityPanel extends JPanel{
 	private class ActivityWindowButtonClick implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (activityList.getSelectedIndex() == -1)
-				JOptionPane.showMessageDialog(null, "Please select an activity to edit.", "No Selection", JOptionPane.INFORMATION_MESSAGE);
-			else {
-				if(e.getSource().equals(createActivityButton))
-					openActivityWindow(ActivityWindowMode.NEW_ACTIVITY);
-				else if(e.getSource().equals(editActivityButton)) {
+			// anyone can create an activity
+			if(e.getSource().equals(createActivityButton))
+				openActivityWindow(ActivityWindowMode.NEW_ACTIVITY);
+				
+			// edit a selected activity
+			else if(e.getSource().equals(editActivityButton)) {
+				
+				// no selection - don't do anything except warn the user
+				if (activityList.getSelectedIndex() == -1)
+					JOptionPane.showMessageDialog(null, "Please select an activity to edit.", "No Selection", JOptionPane.INFORMATION_MESSAGE);
+				
+				// selected for editing
+				else {
 					boolean isAdmin = false;
+					
+					// check if user is an admin
 					for (User u : sessionManager.getActiveGroup().getAdmins())
 						if (u.equals(sessionManager.getActiveUser()))
 							isAdmin = true;
+							
+					// if user is admin or is the performer of the activity, editing is allowed
 					if (isAdmin || sessionManager.getActiveGroup().getActivityManager().getActivityLog().get(activityList.getSelectedIndex()).getUser().equals(sessionManager.getActiveUser()))
 						openActivityWindow(ActivityWindowMode.EDIT_ACTIVITY);
+						
+					// user attempts to edit an activity that isn't his or hers
 					else
 						JOptionPane.showMessageDialog(null, "You do not have permission to edit that activity.", "Forbidden", JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -222,11 +238,13 @@ public class ActivityPanel extends JPanel{
 			this.addComponent(0, 4, 2, 1, gbC, activityWindowPanel, cancelButton);
 			this.addComponent(2, 4, 3, 1, gbC, activityWindowPanel, submitButton);
 			
+			// check if user is admin
 			boolean isAdmin = false;
 			for (User u : sessionManager.getActiveGroup().getAdmins())
 				if (u.equals(sessionManager.getActiveUser()))
 					isAdmin = true;
 			
+			// admins have access to verify checkbox
 			if (isAdmin)
 				this.addComponent(0, 3, 3, 1, gbC, activityWindowPanel, verifyCheckBox);
 			
@@ -244,6 +262,7 @@ public class ActivityPanel extends JPanel{
 			
 			this.setTitle("Edit an Activity");
 			
+			// when editing, initialize all fields to the current values
 			Activity act = sessionManager.getActiveGroup().getActivityManager().getActivityLog().get(activityList.getSelectedIndex());
 			
 			taskComboBox.setSelectedItem(act.getTask());
@@ -288,6 +307,8 @@ public class ActivityPanel extends JPanel{
 					ServerResponse servResponse = (ServerResponse)response;
 					// TODO Error handling
 				} else if(response.getClass().equals(Activity.class)) {
+					
+					// activity was created
 					if (currMode == ActivityWindowMode.NEW_ACTIVITY) {
 						Activity newActivity = (Activity) response;
 						newActivity.setTimeStamp(new Date());
@@ -296,6 +317,8 @@ public class ActivityPanel extends JPanel{
 						listModel.addElement(newActivity.getTask().getTitle() + " - " + newActivity.getUser().getFullname() + ": " + dateFormat.format(newActivity.getTimeStamp()));
 				
 					}
+					
+					// activity was edited
 					else {
 						Activity editActivity = (Activity) response;
 						editActivity.setTimeStamp(new Date());
@@ -307,6 +330,7 @@ public class ActivityPanel extends JPanel{
 			}
 		}
 		
+		// cancel button should close the submission form
 		private class CancelButtonPress implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
