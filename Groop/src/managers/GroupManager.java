@@ -75,6 +75,7 @@ public class GroupManager {
 			this.groups = (ArrayList<Group>) groups;
 			return ServerErrorMessage.NO_ERROR;
 		} catch (Exception ex) {
+			System.out.println(">> " + ex);
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
 			return response.getServerErrorMessage();
 		}
