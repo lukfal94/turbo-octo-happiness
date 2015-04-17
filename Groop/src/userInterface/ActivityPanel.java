@@ -53,6 +53,8 @@ public class ActivityPanel extends JPanel{
 	private DefaultListModel<String> listModel;
 	
 	public ActivityPanel(SessionManager sm) {
+		this.setSize(400, 400);
+		
 		testLabel = new JLabel("Activity Panel");
 		this.sessionManager = sm;
 		
