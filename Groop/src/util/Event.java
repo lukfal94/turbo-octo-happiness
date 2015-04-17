@@ -7,7 +7,7 @@ public class Event {
 	private int id;
 	private String title;
 	private String description;
-	private Date d;
+	private Date date;
 	private EventType type;
 	
 	public enum EventType {
