@@ -1,20 +1,31 @@
 package userInterface;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.util.Calendar;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+
+import social.User;
+import userInterface.CalendarPanel.EventWindow.UserSelector;
 
 public class CalendarPanel extends JPanel{
-	JLabel testLabel;
+	private JLabel testLabel;
+	
+	// Month Names (short)
+	private String[] shortMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 	
 	public CalendarPanel() {
 		testLabel = new JLabel("CalendarPanel");
@@ -33,13 +44,17 @@ public class CalendarPanel extends JPanel{
 	}
 	
 	public class EventWindow extends JFrame {
+
 		private JPanel mainPanel;
 		private EventWindowMode mode;
 		
 		private JLabel titleLabel, descriptionLabel, dateLabel, inviteLabel, locationLabel;
 		private JTextField titleTextField;
-		private JTextArea descriptionTextField, locationTextArea;
-		private JComboBox dayCombo, monthCombo, yearCombo, hourCombo, minCombo, amPmCombo, inviteCombo;
+		private JTextArea descriptionTextArea, locationTextArea;
+		private JComboBox<String> dayCombo, hourCombo, minCombo;
+		private JComboBox<String> monthCombo, yearCombo, amPmCombo;
+		private JComboBox<JPanel> inviteCombo;
+		private ComboBoxRenderer renderer;
 		
 		private GridBagLayout gbLayout;
 		private GridBagConstraints gbC;
@@ -66,6 +81,7 @@ public class CalendarPanel extends JPanel{
 
 		private void initCommonComponents() {
 			// TODO Auto-generated method stub
+			int i, year;
 			
 			// Init Main Panel
 			mainPanel = new JPanel();
@@ -80,15 +96,88 @@ public class CalendarPanel extends JPanel{
 			titleLabel = new JLabel("Title");
 			descriptionLabel = new JLabel("Description");
 			dateLabel = new JLabel("Date");
-			inviteLabel = new JLabel("Select Who to Invite");
+			inviteLabel = new JLabel("Select who to invite");
 			locationLabel = new JLabel("Location");
 			
 			// Init input members
 			titleTextField = new JTextField(20);
-			descriptionTextField = new JTextArea(3, 40);
+			descriptionTextArea = new JTextArea(3, 40);
 			locationTextArea = new JTextArea(3,40);
-			dayCombo = new JComboBox<String>();
 			
+			// Date Combos
+			dayCombo = new JComboBox<String>();
+			monthCombo = new JComboBox<String>();
+			yearCombo = new JComboBox<String>();
+			
+			dayCombo.setMaximumRowCount(12);
+			monthCombo.setMaximumRowCount(8);
+			yearCombo.setMaximumRowCount(6);
+			
+			dayCombo.addItem("Day");
+			for(i = 1; i <= 31; i++) {
+				dayCombo.addItem(Integer.toString(i));
+			}
+			
+			monthCombo.addItem("Month");
+			for(i = 0; i < shortMonths.length; i++) {
+				monthCombo.addItem(shortMonths[i]);
+			}
+			
+			year = Calendar.getInstance().get(Calendar.YEAR);
+			yearCombo.addItem("Year");
+			for(i = year; i < year + 10; i++) {
+				yearCombo.addItem(Integer.toString(i));
+			}
+			
+			// Handle the user invite JCombo
+			inviteCombo = new JComboBox<JPanel>();
+			
+			ComboBoxRenderer renderer = new ComboBoxRenderer();
+			renderer.setPreferredSize(new Dimension(100, 40));
+			inviteCombo.setRenderer(renderer);
+			inviteCombo.setMaximumRowCount(6);
+			
+			mainPanel.add(titleLabel);
+			mainPanel.add(titleTextField);
+			mainPanel.add(dateLabel);
+			mainPanel.add(dayCombo);
+			mainPanel.add(monthCombo);
+			mainPanel.add(yearCombo);
+			mainPanel.add(descriptionLabel);
+			mainPanel.add(descriptionTextArea);
+			mainPanel.add(inviteLabel);
+			mainPanel.add(inviteCombo);
+			
+			this.add(mainPanel);
+		}
+		
+		public class UserSelector extends JPanel {
+			private User user;
+			private JLabel nameLabel;
+			private JCheckBox checkBox;
+			
+			public UserSelector(User u) {
+				this.user = u;
+				
+				nameLabel = new JLabel(u.getFullname());
+				checkBox = new JCheckBox();
+				
+				this.add(checkBox);
+				this.add(nameLabel);
+			}
+		}
+		
+		private class ComboBoxRenderer extends JPanel implements ListCellRenderer {
+
+			@Override
+			public Component getListCellRendererComponent(JList list,
+					Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				// TODO Auto-generated method stub
+				
+				
+				return null;
+			}
 		}
 
 	}

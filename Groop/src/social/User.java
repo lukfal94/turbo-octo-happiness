@@ -22,6 +22,12 @@ public class User{
    		assignedTasks = new ArrayList<Task>();
    	}
    	
+   	// Constructor for test purposes
+   	public User(String fname, String lname) {
+   		this.firstname = fname;
+   		this.lastname = lname;
+   	}
+   	
  	public String getEmail(){
 		return this.email;
 	}

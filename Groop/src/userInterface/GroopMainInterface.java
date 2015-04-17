@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import managers.SessionManager;
 import social.Group;
 import social.User;
+import userInterface.CalendarPanel.EventWindowMode;
 import userInterface.GroupInfoPanel.GroupWindowMode;
 import userInterface.TaskPanel.TaskWindowMode;
 
@@ -138,6 +139,10 @@ public class GroopMainInterface extends JFrame{
 			newMenu.add(menuItem);
 			
 			menuItem = new JMenuItem("Activity");
+			menuItem.addActionListener(new MenuActionListener());
+			newMenu.add(menuItem);
+			
+			menuItem = new JMenuItem("Event");
 			menuItem.addActionListener(new MenuActionListener());
 			newMenu.add(menuItem);
 			
@@ -306,6 +311,9 @@ public class GroopMainInterface extends JFrame{
 				
 				// taskPanel.refresh();
 			} 
+			else if(e.getActionCommand().equals("Event")) {
+				mainGui.getCalendarPanel().openEventWindow(EventWindowMode.CREATE_EVENT);
+			}
 			else if(e.getActionCommand().equals("Delete Group")) {
 				int n = JOptionPane.showConfirmDialog(GroopMainInterface.this, "<html><p style='width: 300px;'>Are you sure you wish to delete: \"" + sessionManager.getActiveGroup().getName() 
 						+ "\"? This action can not be undone!</html></p>",
@@ -331,6 +339,11 @@ public class GroopMainInterface extends JFrame{
 	
 	public TaskPanel getTaskPanel() {
 		return taskPanel;
+	}
+
+	public CalendarPanel getCalendarPanel() {
+		// TODO Auto-generated method stub
+		return this.calendarPanel;
 	}
 
 	public GroupInfoPanel getGroupInfoPanel() {
