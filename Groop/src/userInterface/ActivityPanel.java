@@ -291,40 +291,53 @@ public class ActivityPanel extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				sm = ActivityPanel.this.sessionManager;
 				Object response = null;
-
-				// Send the new activity to the DB.
-				try {
-					if (currMode == ActivityWindowMode.NEW_ACTIVITY)
-						response = registrar.addNewActivity();
-					else
-						// TODO: add editActivity function to registrar
-						response = registrar.editActivity();
-				} catch(Exception ex) {
-					System.out.println(ex);
+				if (taskComboBox.getSelectedIndex() == -1)
+					JOptionPane.showMessageDialog(null, "Please select a task.", "Task Not Selected", JOptionPane.INFORMATION_MESSAGE);
+					
+				else if (descriptionTextArea.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Please give a description.", "No Description", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
-				if(response.getClass().equals(ServerResponse.class)) {
-					ServerResponse servResponse = (ServerResponse)response;
-					// TODO Error handling
-				} else if(response.getClass().equals(Activity.class)) {
-					
-					// activity was created
-					if (currMode == ActivityWindowMode.NEW_ACTIVITY) {
-						Activity newActivity = (Activity) response;
-						newActivity.setTimeStamp(new Date());
-						DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-						sm.getActiveGroup().getActivityManager().addActivity(newActivity);
-						listModel.addElement(newActivity.getTask().getTitle() + " - " + newActivity.getUser().getFullname() + ": " + dateFormat.format(newActivity.getTimeStamp()));
+				else if (timeSpentSpinner.getValue() < 1) {
+					JOptionPane.showMessageDialog(null, "Please give an amount of time.", "No Time Spent", JOptionPane.INFORMATION_MESSAGE);
+				}
 				
+				else {
+
+					// Send the new activity to the DB.
+					try {
+						if (currMode == ActivityWindowMode.NEW_ACTIVITY)
+							response = registrar.addNewActivity();
+						else
+							// TODO: add editActivity function to registrar
+							response = registrar.editActivity();
+					} catch(Exception ex) {
+						System.out.println(ex);
 					}
 					
-					// activity was edited
-					else {
-						Activity editActivity = (Activity) response;
-						editActivity.setTimeStamp(new Date());
-						DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-						sm.getActiveGroup().getActivityManager().getActivityLog().set(editActivity.getId(), editActivity);
-						listModel.set(editActivity.getId(), editActivity.getTask().getTitle() + " - " + editActivity.getUser().getFullname() + ": " + dateFormat.format(editActivity.getTimeStamp()));
+					if(response.getClass().equals(ServerResponse.class)) {
+						ServerResponse servResponse = (ServerResponse)response;
+						// TODO Error handling
+					} else if(response.getClass().equals(Activity.class)) {
+						
+						// activity was created
+						if (currMode == ActivityWindowMode.NEW_ACTIVITY) {
+							Activity newActivity = (Activity) response;
+							newActivity.setTimeStamp(new Date());
+							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+							sm.getActiveGroup().getActivityManager().addActivity(newActivity);
+							listModel.addElement(newActivity.getTask().getTitle() + " - " + newActivity.getUser().getFullname() + ": " + dateFormat.format(newActivity.getTimeStamp()));
+					
+						}
+						
+						// activity was edited
+						else {
+							Activity editActivity = (Activity) response;
+							editActivity.setTimeStamp(new Date());
+							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+							sm.getActiveGroup().getActivityManager().getActivityLog().set(editActivity.getId(), editActivity);
+							listModel.set(editActivity.getId(), editActivity.getTask().getTitle() + " - " + editActivity.getUser().getFullname() + ": " + dateFormat.format(editActivity.getTimeStamp()));
+						}
 					}
 				}
 			}
