@@ -28,6 +28,8 @@ public class Group {
 		this.taskManager = new TaskManager();
 		this.activityManager = new ActivityManager();
 		this.eventManager = new EventManager();
+		
+		this.admins = new ArrayList<User>();
 	}
 	
 	// Queries the server to update its listing of members
