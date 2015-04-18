@@ -221,7 +221,7 @@ public class GroopMainInterface extends JFrame{
 		groupInfoPanel = new GroupInfoPanel(sessionManager);
 		activityPanel = new ActivityPanel(sessionManager);
 		taskPanel = new TaskPanel(sessionManager);
-		calendarPanel = new CalendarPanel();
+		calendarPanel = new CalendarPanel(sessionManager);
 		
 		this.addComponent(0, 0, 1, 1, gbC, this, userInfoPanel);
 		this.addComponent(1, 0, 1, 1, gbC, this, groupInfoPanel);
@@ -257,7 +257,7 @@ public class GroopMainInterface extends JFrame{
 		groupInfoPanel = new GroupInfoPanel(sessionManager);
 		activityPanel = new ActivityPanel(sessionManager);
 		taskPanel = new TaskPanel(sessionManager);
-		calendarPanel = new CalendarPanel();
+		calendarPanel = new CalendarPanel(sessionManager);
 		
 		this.addComponent(0, 0, 1, 1, gbC, this, userInfoPanel);
 		this.addComponent(1, 0, 1, 1, gbC, this, groupInfoPanel);

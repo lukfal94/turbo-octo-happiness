@@ -60,6 +60,7 @@ public class Group {
 			}
 		}
 	}
+	
 	public int getId() {
 		return this.id;
 	}
