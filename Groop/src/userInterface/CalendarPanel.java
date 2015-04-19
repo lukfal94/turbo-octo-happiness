@@ -41,6 +41,7 @@ public class CalendarPanel extends JPanel{
 
     
 	public CalendarPanel() {
+		
 		testLabel = new JLabel("CalendarPanel");
 		
 		this.add(testLabel);
@@ -91,12 +92,12 @@ public class CalendarPanel extends JPanel{
         
         //Set bounds
         this.setBounds(0, 0, 300, 335);
-        monthLbl.setBounds(160-monthLbl.getPreferredSize().width/2, 300, 100, 25);
-        yearLbl.setBounds(10, 355, 80, 20);
-        yearBox.setBounds(230, 355, 80, 20);
-        prevBtn.setBounds(10, 400, 50, 25);
-        nextBtn.setBounds(260, 400, 50, 25);
-        tableSCale.setBounds(10, 50, 300, 250);
+        monthLbl.setBounds(360-monthLbl.getPreferredSize().width/2, 300, 100, 25);
+        yearLbl.setBounds(210, 355, 80, 20);
+        yearBox.setBounds(430, 355, 80, 20);
+        prevBtn.setBounds(210, 400, 50, 25);
+        nextBtn.setBounds(450, 400, 50, 25);
+        tableSCale.setBounds(210, 50, 300, 250);
         
         //Make frame visible
         mainFrame.setResizable(true);
@@ -136,9 +137,10 @@ public class CalendarPanel extends JPanel{
         for (int i=yearReal-100; i<=yearReal+100; i++){
             yearBox.addItem(String.valueOf(i));
         }
-        
+
         //Refresh calendar
         calRefresh (monthReal, yearReal); //Refresh calendar
+
     }
 	
 	public static void calRefresh(int month, int year){
@@ -171,9 +173,10 @@ public class CalendarPanel extends JPanel{
         for (int i=1; i<=nod; i++){
             int row = new Integer((i+som-2)/7);
             int column  =  (i+som-2)%7;
+            
             tableMCalendar.setValueAt(i, row, column);
         }
-        
+       
         //Apply renderers
         calendarTable.setDefaultRenderer(calendarTable.getColumnClass(0), new renderCalendarTbl());
     }
@@ -200,10 +203,19 @@ public class CalendarPanel extends JPanel{
             else{ //Week
                 setBackground(new Color(255, 255, 255));
             }
+            
+            
             if (value != null){
-                if (Integer.parseInt(value.toString()) == dayReal && mthCur == monthReal && yearCur == yearReal){ //Today
-                    setBackground(new Color(220, 220, 255));
-                }
+            	
+            	try{
+	                if (Integer.parseInt(value.toString()) == dayReal && mthCur == monthReal && yearCur == yearReal){ //Today
+	                    setBackground(new Color(220, 220, 255));
+	                }
+	            }
+                catch(NumberFormatException nfe)  
+                {  
+            	    
+            	}  
             }
             setBorder(null);
             setForeground(Color.black);
@@ -234,5 +246,28 @@ public class CalendarPanel extends JPanel{
         }
     }
 
+    public static void addEvent(String newEvent, String dateDue)
+    {
+    	String delims = "[/]";
+    	String[] tokens = dateDue.split(delims);
+    	
+    	
+    	int day = Integer.parseInt(tokens[1]);
+    	int month = Integer.parseInt(tokens[0]);
+    	int year = Integer.parseInt(tokens[2]);
+    	
+        GregorianCalendar cal = new GregorianCalendar(year, month, 1);
+        int nod = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
+        int som = cal.get(GregorianCalendar.DAY_OF_WEEK);
+        
+        int row = new Integer((day+som-2)/7);
+        int column  =  (day+som-2)%7;
+        
+    	String eventLabel = tokens[0] + "\n" + newEvent;
+    	tableMCalendar.setValueAt(newEvent, row, column);
+    }
+    
+   
+    
 	
 }
