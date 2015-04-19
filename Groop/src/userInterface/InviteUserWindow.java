@@ -113,6 +113,7 @@ public class InviteUserWindow extends JFrame {
 				else if(response.getClass().equals(ServerResponse.class)) {
 					ServerResponse servResponse = (ServerResponse) response;
 					if(servResponse.getServerErrorMessage().equals(ServerErrorMessage.USER_NOT_FOUND)) {
+						System.out.println("User not found!");
 						msgText = "Sorry, that user was not found. Try again.";
 					} else if(servResponse.getServerErrorMessage().equals(ServerErrorMessage.USER_IN_GROUP)) {
 						msgText = "That user is already in this group.";

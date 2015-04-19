@@ -56,7 +56,7 @@ public class GroopMainInterface extends JFrame{
 		
 		this.setTitle("Groop - " + sessionManager.getActiveUser().getUsername());
 
-		this.setSize(1200, 800);
+		this.setSize(1350, 900);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 
