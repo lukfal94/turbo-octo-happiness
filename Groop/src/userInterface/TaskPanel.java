@@ -42,6 +42,8 @@ public class TaskPanel extends JPanel{
 	
 	private JButton createTaskButton;
 	
+	private CalendarPanel calendarPanel = new CalendarPanel();
+	
 	public TaskPanel(SessionManager sm) {
 		this.sessionManager = sm;
 		initComponents();
@@ -278,6 +280,7 @@ public class TaskPanel extends JPanel{
 					System.out.println("Deadl: "+deadlineTextField.getText());
 					System.out.println("Prior: "+TaskPriority.values()[priorityComboBox.getSelectedIndex()]);
 					
+					calendarPanel.addEvent(titleTextField.getText(), deadlineTextField.getText());
 					TaskWindow.this.dispose();
 				}
 
