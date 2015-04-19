@@ -1,0 +1,32 @@
+Groop: The Final Stretch
+
+Primary: 
+	- User info panel
+		> Display all user info
+			* All Groups
+			* Tasks,
+			* Activities (?)
+
+	-JMenu
+		> Quit Button
+		> Refine "New" Windows
+
+
+Secondary:
+	- More error checking on Login/Register input
+		> Require proper password
+	- Submit forms on enter press
+	- Edit
+
+Tertiary:
+
+
+Look & Feel
+	- Login Window
+		> Solid background color, transparent logo?
+		> Adjust Margins
+	- Register Window
+		> Better margins
+		> Background color
+		> 2 Columns?
+		> Capitalization in title

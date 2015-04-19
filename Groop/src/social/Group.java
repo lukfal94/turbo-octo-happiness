@@ -1,9 +1,12 @@
 package social;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import databaseComm.ServerResponse;
@@ -58,6 +61,22 @@ public class Group {
 			} catch (Exception ex2) {
 				System.out.println(ex);
 			}
+		}
+	}
+	
+	public Object addUser(String username) throws JsonParseException, JsonMappingException, IOException {
+		ServerResponse response;
+		User newUser;
+		ObjectMapper mapper = new ObjectMapper();
+		
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/groups.php?mode=3&username=" + username +"&gid=" + this.id);
+		
+		try {
+			newUser = mapper.readValue(jsonUrl, User.class);
+			return newUser;
+		} catch (Exception ex) {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response;
 		}
 	}
 	public int getId() {

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JCheckBox;
@@ -18,16 +19,20 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
+import managers.SessionManager;
 import social.User;
 import userInterface.CalendarPanel.EventWindow.UserSelector;
 
 public class CalendarPanel extends JPanel{
+	private SessionManager sessionManager;
 	private JLabel testLabel;
 	
 	// Month Names (short)
 	private String[] shortMonths = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 	
-	public CalendarPanel() {
+	public CalendarPanel(SessionManager sm) {
+		this.sessionManager = sm;
+		
 		testLabel = new JLabel("CalendarPanel");
 		
 		this.add(testLabel);
@@ -53,7 +58,9 @@ public class CalendarPanel extends JPanel{
 		private JTextArea descriptionTextArea, locationTextArea;
 		private JComboBox<String> dayCombo, hourCombo, minCombo;
 		private JComboBox<String> monthCombo, yearCombo, amPmCombo;
-		private JComboBox<JPanel> inviteCombo;
+		
+		private JComboBox inviteCombo;
+		private ArrayList<UserSelector> invitees;
 		private ComboBoxRenderer renderer;
 		
 		private GridBagLayout gbLayout;
@@ -130,7 +137,12 @@ public class CalendarPanel extends JPanel{
 			}
 			
 			// Handle the user invite JCombo
-			inviteCombo = new JComboBox<JPanel>();
+			invitees = new ArrayList<UserSelector>();
+			for(User u : sessionManager.getActiveGroup().getMembers()) {
+				invitees.add(new UserSelector(u));
+			}
+			
+			inviteCombo = new JComboBox();
 			
 			ComboBoxRenderer renderer = new ComboBoxRenderer();
 			renderer.setPreferredSize(new Dimension(100, 40));
