@@ -88,7 +88,7 @@ public class GroopMainInterface extends JFrame{
 	}
 	
 	private class GroopMenuBar extends JMenuBar {
-		private JMenu fileMenu, newMenu, editMenu, groupMenu, switchGroupMenu;
+		private JMenu fileMenu, newMenu, editMenu, groupMenu, switchGroupMenu, membersMenu;
 		private JMenuItem menuItem;
 	
 		public void updateGroupMenu() {
@@ -186,6 +186,14 @@ public class GroopMainInterface extends JFrame{
 				switchGroupMenu.add(menuItem);
 			}
 			groupMenu.add(switchGroupMenu);
+			
+			membersMenu = new JMenu("Members");
+			
+			for(User u : sessionManager.getActiveGroup().getMembers()) {
+				menuItem = new JMenuItem(u.getUsername());
+				membersMenu.add(menuItem);
+			}
+			groupMenu.add(membersMenu);
 			
 			menuItem = new JMenuItem("Invite User");
 			menuItem.addActionListener(new MenuActionListener());
@@ -317,6 +325,9 @@ public class GroopMainInterface extends JFrame{
 			}
 			else if(e.getActionCommand().equals("Event")) {
 				mainGui.getCalendarPanel().openEventWindow(EventWindowMode.CREATE_EVENT);
+			}
+			else if(e.getActionCommand().equals("Invite User")) {
+				InviteUserWindow userWindow = new InviteUserWindow(sessionManager);
 			}
 			else if(e.getActionCommand().equals("Delete Group")) {
 				int n = JOptionPane.showConfirmDialog(GroopMainInterface.this, "<html><p style='width: 300px;'>Are you sure you wish to delete: \"" + sessionManager.getActiveGroup().getName() 
