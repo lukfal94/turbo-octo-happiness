@@ -75,10 +75,7 @@ public class GroopMainInterface extends JFrame{
 		menuBar.initMenuBar();
 		this.setJMenuBar(menuBar);
 		
-		if(sessionManager.getGuiMode() == GuiMode.STANDARD)
-			initStandardComponents();
-		else if(sessionManager.getGuiMode() == GuiMode.BLANK) 
-			initBlankComponents();
+		initComponents();
 	}
 
 	private class GroupMenuItem extends JMenuItem {
@@ -194,13 +191,16 @@ public class GroopMainInterface extends JFrame{
 			}
 			groupMenu.add(switchGroupMenu);
 			
-			membersMenu = new JMenu("Members");
 			
-			for(User u : sessionManager.getActiveGroup().getMembers()) {
-				menuItem = new JMenuItem(u.getUsername());
-				membersMenu.add(menuItem);
+			if(sessionManager.getGuiMode().equals(GuiMode.STANDARD)) {
+				membersMenu = new JMenu("Members");
+			
+				for(User u : sessionManager.getActiveGroup().getMembers()) {
+					menuItem = new JMenuItem(u.getUsername());
+					membersMenu.add(menuItem);
+				}
+				groupMenu.add(membersMenu);
 			}
-			groupMenu.add(membersMenu);
 			
 			menuItem = new JMenuItem("Invite User");
 			menuItem.addActionListener(new MenuActionListener());
@@ -220,7 +220,7 @@ public class GroopMainInterface extends JFrame{
 	}
 	
 	
-	private void initStandardComponents() {
+	private void initComponents() {
 		
 		gbLayout = new GridBagLayout();
 		gbC = new GridBagConstraints();
@@ -255,42 +255,6 @@ public class GroopMainInterface extends JFrame{
 		this.add(taskPanel);
 		this.add(activityPanel);
 		this.add(calendarPanel);
-		
-		this.setVisible(true);
-	}
-	
-	private void initBlankComponents() {
-		this.setTitle("Groop - " + sessionManager.getActiveUser().getUsername());
-
-		this.setSize(1200, 800);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		// Center the frame in the screen
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-		
-		gbLayout = new GridBagLayout();
-		gbC = new GridBagConstraints();
-		
-		gbC.fill = GridBagConstraints.BOTH;
-		gbC.weightx = 0.5;
-		gbC.weighty = 0.5;
-		
-		this.setLayout(gbLayout);
-		
-		// Initialize the content panes
-		userInfoPanel = new UserInfoPanel(sessionManager);
-		groupInfoPanel = new GroupInfoPanel(sessionManager);
-		activityPanel = new ActivityPanel(sessionManager);
-		taskPanel = new TaskPanel(sessionManager);
-		calendarPanel = new CalendarPanel(sessionManager);
-		
-		this.addComponent(0, 0, 1, 1, gbC, this, userInfoPanel);
-		this.addComponent(1, 0, 1, 1, gbC, this, groupInfoPanel);
-		this.addComponent(0, 1, 3, 3, gbC, this, calendarPanel);
-		this.addComponent(3, 0, 1, 2, gbC, this, taskPanel);
-		this.addComponent(3, 2, 1, 2, gbC, this, activityPanel);
-		
 		
 		this.setVisible(true);
 	}

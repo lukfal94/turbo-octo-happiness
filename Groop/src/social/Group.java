@@ -32,6 +32,7 @@ public class Group {
 		this.activityManager = new ActivityManager();
 		this.eventManager = new EventManager();
 		
+		this.members = new ArrayList<User>();
 		this.admins = new ArrayList<User>();
 	}
 	
