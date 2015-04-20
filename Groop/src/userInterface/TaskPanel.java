@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -22,6 +23,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -40,6 +42,10 @@ import util.Task.TaskPriority;
 public class TaskPanel extends JPanel{
 	private SessionManager sessionManager;
 	
+	private JLabel titleLabel;
+	private JPanel taskScrollPanel;
+	private JScrollPane scrollPane;
+	
 	private JButton createTaskButton;
 	
 	public TaskPanel(SessionManager sm) {
@@ -48,24 +54,53 @@ public class TaskPanel extends JPanel{
 	}
 	
 	public void initComponents() {
-		this.setSize(400, 400);
+//		this.setSize(400, 400);
+		this.setLayout(null);
+		
+		taskScrollPanel = new JPanel();
+		taskScrollPanel.setLayout(null);
+		taskScrollPanel.setSize(300, 1000);
+		taskScrollPanel.setBackground(Color.GREEN);
+		
+		scrollPane = new JScrollPane(taskScrollPanel);
+		scrollPane.setBounds(50, 75, 300, 300);
+
+		titleLabel = new JLabel("<html><h1 style='text-align: center;'>Tasks</h1></html>");
+		titleLabel.setFont(new Font("Sans serif", 0, 20));
+		titleLabel.setBackground(Color.RED);
+		titleLabel.setSize(new Dimension(300, 50));
+		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		titleLabel.setBounds(50, 0, 300, 50);
 		
 		createTaskButton = new JButton("New");
-		createTaskButton.setSize(100, 50);
 		createTaskButton.addActionListener(new TaskWindowButtonClick());
+		createTaskButton.setBounds(150, 300, 100, 50);
 		createTaskButton.setName("createTaskButton");
 		
 		if(sessionManager.getGuiMode() == GuiMode.STANDARD) {
 			// Populate the tasks
 			System.out.println(sessionManager.getActiveGroup().getTaskManager().getTasks().size());
 			
+			int i = 0;
 			for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
-				this.add(new TaskElement(t));
-				System.out.println("Adding " + t);
+				for(int j = 0; j < 2; j++) {
+					TaskElement te = new TaskElement(t);
+					te.setBounds(0, i * 100, 300, 100);
+					taskScrollPanel.add(te);
+					System.out.println("Adding " + t);
+					i++;
+				}
 			}
 		}
 		
+//		for(int i = 0; i < 50; i++) {
+//			taskScrollPanel.add(new JLabel("LOLOL"));
+//		}
+		
 		this.setBackground(Color.CYAN);
+		
+		this.add(titleLabel);
+		this.add(scrollPane);
 		this.add(createTaskButton);
 	}
 	
@@ -94,7 +129,7 @@ public class TaskPanel extends JPanel{
 		private JLabel descriptionLabel;
 		private JLabel deadlineLabel;
 		private JLabel assignedToLabel;
-		private JComboBox assignedToComboBox;
+		private JComboBox<String> assignedToComboBox;
 		private JButton editButton;
 		
 		private GridBagLayout gbLayout;
@@ -103,19 +138,35 @@ public class TaskPanel extends JPanel{
 		public TaskElement(Task t) {
 			this.task = t;
 			
+			this.setSize(new Dimension(300, 100));
+			this.setLayout(null);
+			
 			initComponents();
-			this.setBackground(Color.GREEN);
+			this.setBackground(Color.RED);
 		}
 		
 		private void initComponents() {
-			gbLayout = new GridBagLayout();
-			gbC = new GridBagConstraints();
 			
 			titleLabel = new JLabel(task.getTitle());
-			descriptionLabel = new JLabel(String.format("<html><p style='width: %d;'>%s</p></html>", 200, task.getDescription()));
+			titleLabel.setBounds(5, 5, 95, 20);
 			
-			this.add(titleLabel, gbC);
-			this.add(descriptionLabel, gbC);
+			deadlineLabel = new JLabel("dd-mm-yyyy");
+			deadlineLabel.setBounds(200, 0, 100, 20);
+			
+			descriptionLabel = new JLabel(String.format("<html><p style='width: %d;'>%s</p></html>", 250, task.getDescription()));
+			descriptionLabel.setBounds(5, 25, 295, 50);	
+			
+			assignedToLabel = new JLabel("Assigned to:");
+			assignedToLabel.setBounds(5, 75, 95, 25);
+			
+			assignedToComboBox = new JComboBox();
+			assignedToComboBox.setBounds(105, 75, 100, 25);
+			
+			this.add(titleLabel);
+			this.add(deadlineLabel);
+			this.add(descriptionLabel);
+			this.add(assignedToLabel);
+			this.add(assignedToComboBox);
 		}
 	}
 	
