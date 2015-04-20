@@ -13,28 +13,35 @@ import managers.SessionManager;
 public class UserInfoPanel extends JPanel {	
 	private SessionManager sessionManager;
 
-	private JLabel fullname;
-	private JLabel username;
-	
-	// Layout
-	private GridBagLayout gbLayout;
-	private GridBagConstraints gbConstraints;
+	private JLabel fullnameLabel;
+	private JLabel usernameLabel;
+	private JLabel emailLabel;
 	
 	public UserInfoPanel(SessionManager sm) {
 		this.sessionManager = sm;
 		initComponents();
 		
-		this.setBackground(Color.ORANGE);
+		this.setBackground(UIVisual.getGuiColor());
 	}
 	
 	private void initComponents() {
-		fullname = new JLabel(sessionManager.getActiveUser().getFullname());
-		fullname.setFont(new Font("Sans-Serif", Font.BOLD, 24));
+		this.setLayout(null);
 		
-		username = new JLabel(sessionManager.getActiveUser().getUsername());
-		username.setFont(new Font("Sans-Serif", Font.ITALIC, 18));
+		fullnameLabel = new JLabel(sessionManager.getActiveUser().getFullname());
+		fullnameLabel.setFont(new Font("Sans-Serif Italic", Font.BOLD, 24));
 		
-		this.add(fullname);
-		this.add(username);
+		usernameLabel = new JLabel(sessionManager.getActiveUser().getUsername());
+		usernameLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 16));
+		
+		emailLabel = new JLabel(sessionManager.getActiveUser().getEmail());
+		emailLabel.setFont(new Font("Sans-Sefif", Font.PLAIN, 16));
+		
+		fullnameLabel.setBounds(10, 10, 200, 25);
+		usernameLabel.setBounds(10, 45, 200, 20);
+		emailLabel.setBounds(10, 65, 200, 20);
+		
+		this.add(fullnameLabel);
+		this.add(usernameLabel);
+		this.add(emailLabel);
 	}
 }
