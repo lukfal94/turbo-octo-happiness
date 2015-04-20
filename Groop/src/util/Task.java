@@ -14,6 +14,12 @@ public class Task{
 	private ArrayList<User> assignedTo;
 	private boolean completed;
 	
+	public Task() {
+		this.assignedTo = new ArrayList<User>(0);
+
+		System.out.println(">> " + this.assignedTo.size());
+	}
+	
 	public enum TaskPriority {
 		NONE, LOW, MEDIUM, HIGH
 	}

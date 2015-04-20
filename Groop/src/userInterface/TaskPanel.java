@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -30,6 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 import databaseComm.Registrar;
 import databaseComm.ServerResponse;
@@ -59,11 +61,10 @@ public class TaskPanel extends JPanel{
 		
 		taskScrollPanel = new JPanel();
 		taskScrollPanel.setLayout(null);
-		taskScrollPanel.setSize(300, 1000);
 		taskScrollPanel.setBackground(Color.GREEN);
 		
-		scrollPane = new JScrollPane(taskScrollPanel);
-		scrollPane.setBounds(50, 75, 300, 300);
+		scrollPane = new JScrollPane(taskScrollPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(40, 75, 319, 300);
 
 		titleLabel = new JLabel("<html><h1 style='text-align: center;'>Tasks</h1></html>");
 		titleLabel.setFont(new Font("Sans serif", 0, 20));
@@ -83,14 +84,13 @@ public class TaskPanel extends JPanel{
 			
 			int i = 0;
 			for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
-				for(int j = 0; j < 2; j++) {
-					TaskElement te = new TaskElement(t);
-					te.setBounds(0, i * 100, 300, 100);
-					taskScrollPanel.add(te);
-					System.out.println("Adding " + t);
-					i++;
-				}
+				TaskElement te = new TaskElement(t);
+				te.setBounds(0, i * 100, 300, 100);
+				taskScrollPanel.add(te);
+				System.out.println("Adding " + t);
+				i++;
 			}
+			taskScrollPanel.setPreferredSize(new Dimension(300, 100 * i));
 		}
 		
 //		for(int i = 0; i < 50; i++) {
@@ -132,6 +132,8 @@ public class TaskPanel extends JPanel{
 		private JComboBox<String> assignedToComboBox;
 		private JButton editButton;
 		
+		private Border border = BorderFactory.createLineBorder(Color.BLACK);
+		
 		private GridBagLayout gbLayout;
 		private GridBagConstraints gbC;
 		
@@ -142,6 +144,7 @@ public class TaskPanel extends JPanel{
 			this.setLayout(null);
 			
 			initComponents();
+			this.setBorder(border);
 			this.setBackground(Color.RED);
 		}
 		
@@ -159,8 +162,16 @@ public class TaskPanel extends JPanel{
 			assignedToLabel = new JLabel("Assigned to:");
 			assignedToLabel.setBounds(5, 75, 95, 25);
 			
-			assignedToComboBox = new JComboBox();
+			assignedToComboBox = new JComboBox<String>();
 			assignedToComboBox.setBounds(105, 75, 100, 25);
+			
+			// I hate null pointers...
+//			for(User u : task.getAssignedTo()) {
+//				if(u == null) {
+//					System.out.println("null2");
+//				}
+//				assignedToComboBox.addItem(u.getUsername());
+//			}
 			
 			this.add(titleLabel);
 			this.add(deadlineLabel);
