@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -33,6 +35,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import managers.SessionManager;
 import social.User;
@@ -45,24 +49,33 @@ import databaseComm.ServerResponse;
 public class ActivityPanel extends JPanel{
 	SessionManager sessionManager;
 	
-	private JLabel testLabel; // not sure if this is still needed, kept it just in case
 	private JButton createActivityButton;
 	private JButton editActivityButton;
 	private JList<String> activityList;
 	private JScrollPane activityListView;
 	private DefaultListModel<String> listModel;
+	private JTextArea summaryTextArea;
+	private JLabel activityTitle;
 	
 	public ActivityPanel(SessionManager sm) {
-		this.setSize(400, 400);
+		//this.setSize(400, 350);
+		this.setLayout(null);
 		
-		testLabel = new JLabel("Activity Panel");
 		this.sessionManager = sm;
 		
+		activityTitle = new JLabel("<html><h1 style='text-align: center;'>Activity</h1></html>");
+		activityTitle.setFont(new Font("Sans serif", 0, 20));
+		activityTitle.setSize(new Dimension(400, 50));
+		activityTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		createActivityButton = new JButton("New");
-		createActivityButton.addActionListener(new ActivityWindowButtonClick());
+		createActivityButton.addActionListener(new ActivityWindowButtonClick());	
 		
 		editActivityButton = new JButton("Edit");
 		editActivityButton.addActionListener(new ActivityWindowButtonClick());
+		
+		summaryTextArea = new JTextArea("");
+		summaryTextArea.setEditable(false);
 		
 		// store list of activites in a JList to be displayed, but because we need to edit, they must be stored in a listmodel
 		listModel = new DefaultListModel<String>();
@@ -72,17 +85,25 @@ public class ActivityPanel extends JPanel{
 		if (sessionManager.getActiveGroup() != null) {
 			for (Activity a : sessionManager.getActiveGroup().getActivityManager().getActivityLog()) {
 				
-				listModel.addElement(a.getTask().getTitle() + " - " + a.getUser().getFullname() + ": " + dateFormat.format(a.getTimeStamp()));
+				listModel.addElement(a.getTask().getTitle() + "\n" + a.getUser().getUsername() + " - " + dateFormat.format(a.getTimeStamp()));
 			}
 		}
 		
 		activityList = new JList<String>(listModel);
 		activityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		activityList.addListSelectionListener(new ActivityListSelect());
 		
-		activityListView = new JScrollPane(activityList);
+		activityListView = new JScrollPane(activityList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
-		this.add(testLabel);
+		activityTitle.setBounds(0, 0, 400, 50);		
+		activityListView.setBounds(10, 70, 180, 250);
+		summaryTextArea.setBounds(200, 70, 170, 210);
+		createActivityButton.setBounds(200, 290, 80, 30);
+		editActivityButton.setBounds(290, 290, 80, 30);
+		
+		this.add(activityTitle);
 		this.add(activityListView);
+		this.add(summaryTextArea);
 		this.add(createActivityButton);
 		this.add(editActivityButton);
 		//this.setBackground(Color.GREEN);
@@ -92,13 +113,32 @@ public class ActivityPanel extends JPanel{
 	public enum ActivityWindowMode {
 		NEW_ACTIVITY, EDIT_ACTIVITY
 	}
+	
+	private class ActivityListSelect implements ListSelectionListener {
+
+		@Override
+		public void valueChanged(ListSelectionEvent arg0) {
+			if (activityList.getSelectedIndex() != -1) {
+				Activity act = sessionManager.getActiveGroup().getActivityManager().getActivityLog().get(activityList.getSelectedIndex());
+				DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+	
+				summaryTextArea.setText(act.getTask().getTitle() + "\n" + dateFormat.format(act.getTimeStamp()) + " - " + act.getUser().getUsername() + "\n" + Integer.toString(act.getTimeSpend()) + " hours\n" + act.getDescription());
+				
+			}
+			else
+				summaryTextArea.setText("");
+			
+		}
+		
+	}
 
 	private class ActivityWindowButtonClick implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// anyone can create an activity
 			if(e.getSource().equals(createActivityButton))
-				openActivityWindow(ActivityWindowMode.NEW_ACTIVITY);
+				//openActivityWindow(ActivityWindowMode.NEW_ACTIVITY);
+				System.out.printf("size is %d %d\n", ((JButton) e.getSource()).getWidth(), ((JButton) e.getSource()).getHeight());
 				
 			// edit a selected activity
 			else if(e.getSource().equals(editActivityButton)) {
@@ -109,15 +149,9 @@ public class ActivityPanel extends JPanel{
 				
 				// selected for editing
 				else {
-					boolean isAdmin = false;
-					
-					// check if user is an admin
-					for (User u : sessionManager.getActiveGroup().getAdmins())
-						if (u.equals(sessionManager.getActiveUser()))
-							isAdmin = true;
 							
-					// if user is admin or is the performer of the activity, editing is allowed
-					if (isAdmin || sessionManager.getActiveGroup().getActivityManager().getActivityLog().get(activityList.getSelectedIndex()).getUser().equals(sessionManager.getActiveUser()))
+					// if user is admin or is the performer of the activity, editing is allowed (this is a horrendous line, i know)
+					if (sessionManager.getActiveGroup().getAdmins().contains(sessionManager.getActiveUser()) || sessionManager.getActiveGroup().getActivityManager().getActivityLog().get(activityList.getSelectedIndex()).getUser().equals(sessionManager.getActiveUser()))
 						openActivityWindow(ActivityWindowMode.EDIT_ACTIVITY);
 						
 					// user attempts to edit an activity that isn't his or hers
@@ -151,6 +185,8 @@ public class ActivityPanel extends JPanel{
 		private JButton submitButton;
 		private JButton cancelButton;
 		
+		private int activityInd;
+		
 		// Layout members
 		private BorderLayout borderLayout = new BorderLayout();
 		private GridBagLayout gbLayout = new GridBagLayout();
@@ -159,6 +195,8 @@ public class ActivityPanel extends JPanel{
 		public ActivityWindow(ActivityWindowMode mode) {
 			this.currMode = mode;
 			this.setLayout(borderLayout);
+			
+			activityInd = activityList.getSelectedIndex();
 			
 			// Init Common Elements
 			initCommon();
@@ -241,14 +279,8 @@ public class ActivityPanel extends JPanel{
 			this.addComponent(0, 4, 2, 1, gbC, activityWindowPanel, cancelButton);
 			this.addComponent(2, 4, 3, 1, gbC, activityWindowPanel, submitButton);
 			
-			// check if user is admin
-			boolean isAdmin = false;
-			for (User u : sessionManager.getActiveGroup().getAdmins())
-				if (u.equals(sessionManager.getActiveUser()))
-					isAdmin = true;
-			
 			// admins have access to verify checkbox
-			if (isAdmin)
+			if (sessionManager.getActiveGroup().getAdmins().contains(sessionManager.getActiveUser()))
 				this.addComponent(0, 3, 3, 1, gbC, activityWindowPanel, verifyCheckBox);
 			
 			this.add(activityWindowPanel, BorderLayout.CENTER);
@@ -311,7 +343,7 @@ public class ActivityPanel extends JPanel{
 					try {
 						if (currMode == ActivityWindowMode.NEW_ACTIVITY)
 							response = registrar.addNewActivity();
-						//else
+						// else
 							// TODO: add editActivity function to registrar
 							// response = registrar.editActivity();
 					} catch(Exception ex) {
@@ -329,7 +361,7 @@ public class ActivityPanel extends JPanel{
 							newActivity.setTimeStamp(new Date());
 							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 							sm.getActiveGroup().getActivityManager().addActivity(newActivity);
-							listModel.addElement(newActivity.getTask().getTitle() + " - " + newActivity.getUser().getFullname() + ": " + dateFormat.format(newActivity.getTimeStamp()));
+							listModel.addElement(newActivity.getTask().getTitle() + "\n" + newActivity.getUser().getUsername() + " - " + dateFormat.format(newActivity.getTimeStamp()));
 					
 						}
 						
@@ -338,8 +370,8 @@ public class ActivityPanel extends JPanel{
 							Activity editActivity = (Activity) response;
 							editActivity.setTimeStamp(new Date());
 							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-							sm.getActiveGroup().getActivityManager().getActivityLog().set(editActivity.getId(), editActivity);
-							listModel.set(editActivity.getId(), editActivity.getTask().getTitle() + " - " + editActivity.getUser().getFullname() + ": " + dateFormat.format(editActivity.getTimeStamp()));
+							sm.getActiveGroup().getActivityManager().getActivityLog().set(activityInd, editActivity);
+							listModel.set(activityInd, editActivity.getTask().getTitle() + "\n" + editActivity.getUser().getUsername() + " - " + dateFormat.format(editActivity.getTimeStamp()));
 						}
 					}
 				}
