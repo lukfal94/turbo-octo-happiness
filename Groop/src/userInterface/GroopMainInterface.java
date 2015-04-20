@@ -45,7 +45,10 @@ public class GroopMainInterface extends JFrame{
 	private TaskPanel taskPanel;
 	private CalendarPanel calendarPanel;
 
-	
+    private static final int FRAME_X = 1200;
+    private static final int FRAME_Y = 800;
+    private boolean lockFrame = true;
+    
 	public enum GuiMode {
 		BLANK, TUTORIAL, STANDARD
 	}
@@ -56,10 +59,14 @@ public class GroopMainInterface extends JFrame{
 		
 		this.setTitle("Groop - " + sessionManager.getActiveUser().getUsername());
 
-		this.setSize(1350, 900);
+		this.setSize(FRAME_X, FRAME_Y);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-
+		if(lockFrame) {	        
+	        this.setMinimumSize(new Dimension(FRAME_X, FRAME_Y));
+	        this.setMaximumSize(new Dimension(FRAME_X, FRAME_Y));
+		}
+		
 		// Center the frame in the screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -222,21 +229,32 @@ public class GroopMainInterface extends JFrame{
 		gbC.weightx = 0.5;
 		gbC.weighty = 0.5;
 		
-		this.setLayout(gbLayout);
+		this.setLayout(null);
 		
 		// Initialize the content panes
 		userInfoPanel = new UserInfoPanel(sessionManager);
 		groupInfoPanel = new GroupInfoPanel(sessionManager);
-		activityPanel = new ActivityPanel(sessionManager);
 		taskPanel = new TaskPanel(sessionManager);
+		activityPanel = new ActivityPanel(sessionManager);
 		calendarPanel = new CalendarPanel(sessionManager);
 		
-		this.addComponent(0, 0, 1, 1, gbC, this, userInfoPanel);
-		this.addComponent(1, 0, 1, 1, gbC, this, groupInfoPanel);
-		this.addComponent(0, 1, 3, 3, gbC, this, calendarPanel);
-		this.addComponent(3, 0, 1, 2, gbC, this, taskPanel);
-		this.addComponent(3, 2, 1, 2, gbC, this, activityPanel);
+		userInfoPanel.setBounds(0, 0, 300, 200);
+		groupInfoPanel.setBounds(300, 0, 500, 200);
+		taskPanel.setBounds(800, 0, 400, 400);
+		activityPanel.setBounds(800, 400, 400, 400);
+		calendarPanel.setBounds(0, 200, 800, 600);
 		
+//		this.addComponent(0, 0, 1, 1, gbC, this, userInfoPanel);
+//		this.addComponent(1, 0, 1, 1, gbC, this, groupInfoPanel);
+//		this.addComponent(0, 1, 3, 3, gbC, this, calendarPanel);
+//		this.addComponent(3, 0, 1, 2, gbC, this, taskPanel);
+//		this.addComponent(3, 2, 1, 2, gbC, this, activityPanel);
+		
+		this.add(userInfoPanel);
+		this.add(groupInfoPanel);
+		this.add(taskPanel);
+		this.add(activityPanel);
+		this.add(calendarPanel);
 		
 		this.setVisible(true);
 	}
