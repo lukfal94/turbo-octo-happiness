@@ -89,8 +89,13 @@ public class TaskPanel extends JPanel{
 			for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
 				TaskElement te = new TaskElement(t);
 				te.setBounds(0, i * 100, 300, 100);
+				
+				if(!t.isCompleted())
+					te.setBackground(UIVisual.priorityAsColor(t.getDeadline().getPriority()));
+				else 
+					te.setBackground(UIVisual.completeTaskColor);
+				
 				taskScrollPanel.add(te);
-				System.out.println("Adding " + t);
 				i++;
 			}
 			taskScrollPanel.setPreferredSize(new Dimension(300, 100 * i));
@@ -119,8 +124,13 @@ public class TaskPanel extends JPanel{
 		for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
 			TaskElement te = new TaskElement(t);
 			te.setBounds(0, i * 100, 300, 100);
+			
+			if(!t.isCompleted())
+				te.setBackground(UIVisual.priorityAsColor(t.getDeadline().getPriority()));
+			else 
+				te.setBackground(UIVisual.completeTaskColor);
+			
 			taskScrollPanel.add(te);
-			System.out.println("Adding " + t);
 			i++;
 		}
 		taskScrollPanel.setPreferredSize(new Dimension(300, 100 * i));
@@ -150,6 +160,10 @@ public class TaskPanel extends JPanel{
 		private JLabel deadlineLabel;
 		private JLabel assignedToLabel;
 		private JComboBox<String> assignedToComboBox;
+		private JButton gotItButton;
+		private JButton logActivityButton;
+		private JButton completeButton;
+		
 		private JButton editButton;
 		
 		private Border border = BorderFactory.createLineBorder(Color.BLACK);
@@ -185,6 +199,22 @@ public class TaskPanel extends JPanel{
 			assignedToComboBox = new JComboBox<String>();
 			assignedToComboBox.setBounds(105, 75, 100, 25);
 			
+			gotItButton = new JButton("!");
+			gotItButton.setBounds(215, 77, 20, 20);
+			gotItButton.addActionListener(new TaskElementButtonPress(this));
+			
+			logActivityButton = new JButton("A");
+			logActivityButton.setBounds(237, 77, 20, 20);
+			logActivityButton.addActionListener(new TaskElementButtonPress(this));
+			
+			completeButton = new JButton("C");
+			completeButton.setBounds(259, 77, 20, 20);
+			completeButton.addActionListener(new TaskElementButtonPress(this));
+			
+			if(task.isCompleted()) {
+				completeButton.setEnabled(false);
+			}
+			
 			// I hate null pointers...
 //			for(User u : task.getAssignedTo()) {
 //				if(u == null) {
@@ -198,9 +228,35 @@ public class TaskPanel extends JPanel{
 			this.add(descriptionLabel);
 			this.add(assignedToLabel);
 			this.add(assignedToComboBox);
+			this.add(gotItButton);
+			this.add(logActivityButton);
+			this.add(completeButton);
+		}
+
+		public Task getTask() {
+			// TODO Auto-generated method stub
+			return this.task;
 		}
 	}
 	
+	private class TaskElementButtonPress implements ActionListener {
+		
+		private TaskElement te;
+		
+		public TaskElementButtonPress(TaskElement te) {
+			this.te = te;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getActionCommand().equals("!")) {
+				System.out.println(te.getTask().getTitle() + " - got it!");
+			} else if(e.getActionCommand().equals("A")) {
+				
+			} else if(e.getActionCommand().equals("C")) {
+				
+			}
+		}
+	}
 	private class TaskWindow extends JFrame {
 		private JPanel taskWindowPanel;
 		private TaskWindowMode currMode;

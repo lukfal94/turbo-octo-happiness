@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
+import util.Task.TaskPriority;
+
 public class Deadline extends Event {
 	private String priority;
 	
@@ -18,7 +20,7 @@ public class Deadline extends Event {
 		this.priority = newPriority;
 	}
 	
-	public String getPriority(){
-		return priority;
+	public TaskPriority getPriority(){
+		return TaskPriority.values()[Integer.valueOf(priority)];
 	}
 }

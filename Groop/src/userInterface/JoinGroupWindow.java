@@ -121,10 +121,12 @@ public class JoinGroupWindow extends JFrame {
 						} catch( Exception ex) {
 							System.out.println("Could not sync groups");
 						}
+						sm.setActiveGroup(sm.getGroups().get(sm.getGroups().size() - 1));
 						sm.getMainGUI().refreshInterface();;
 					}
 				}
 				msgLabel.setText(msgText);
+				JoinGroupWindow.this.dispose();
 			}
 		}
 	}
