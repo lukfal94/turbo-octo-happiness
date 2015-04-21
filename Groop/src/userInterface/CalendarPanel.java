@@ -7,7 +7,11 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -22,6 +26,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
 
 public class CalendarPanel extends JPanel{
 	
@@ -38,7 +43,9 @@ public class CalendarPanel extends JPanel{
 
     static Container pane;
     static DefaultTableModel tableMCalendar; //Table model
-
+    
+    static Hashtable <String, List>  eventRowHash = new Hashtable<String, List>();
+    static Hashtable <String, String>  eventNameHash = new Hashtable<String, String>();
     
 	public CalendarPanel() {
 		
@@ -157,10 +164,23 @@ public class CalendarPanel extends JPanel{
         monthLbl.setBounds(160-monthLbl.getPreferredSize().width/2, 355, 180, 25); //Re-align label with calendar
         yearBox.setSelectedItem(String.valueOf(year)); //Select the correct year in the combo box
         
+        String dateNoDelims = Integer.toString(month + 1) + Integer.toString(year);
+        
+        List <Integer>  rowList = new ArrayList<Integer>();
+        
+        
+        
+        if(eventRowHash.containsKey(dateNoDelims))
+        {
+        	 rowList = (List<Integer>) eventRowHash.get(dateNoDelims);
+        }
+  
+        	
         //Clear table
         for (int i=0; i<6; i++){
             for (int j=0; j<7; j++){
-                tableMCalendar.setValueAt(null, i, j);
+            	if(!rowList.contains(i))
+            		tableMCalendar.setValueAt(null, i, j);
             }
         }
         
@@ -169,12 +189,21 @@ public class CalendarPanel extends JPanel{
         nod = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
         som = cal.get(GregorianCalendar.DAY_OF_WEEK);
         
+        String dateStoreNoDelimsDay;
+        
         //Draw calendar
         for (int i=1; i<=nod; i++){
             int row = new Integer((i+som-2)/7);
             int column  =  (i+som-2)%7;
             
-            tableMCalendar.setValueAt(i, row, column);
+            dateStoreNoDelimsDay = Integer.toString(i) + Integer.toString(month +1) + Integer.toString(year);
+            
+            if(!rowList.contains(i))
+            	tableMCalendar.setValueAt(i, row, column);
+            else 
+            {
+            	tableMCalendar.setValueAt(Integer.toString(i) + " " + eventNameHash.get(dateStoreNoDelimsDay), row, column);
+            }
         }
        
         //Apply renderers
@@ -248,23 +277,52 @@ public class CalendarPanel extends JPanel{
 
     public static void addEvent(String newEvent, String dateDue)
     {
-    	String delims = "[/]";
-    	String[] tokens = dateDue.split(delims);
+    	String delims = "[/, :]";
+    	String[] tokens = new String [4];
+    	tokens = dateDue.split(delims);
     	
     	
     	int day = Integer.parseInt(tokens[1]);
     	int month = Integer.parseInt(tokens[0]);
     	int year = Integer.parseInt(tokens[2]);
     	
-        GregorianCalendar cal = new GregorianCalendar(year, month, 1);
+    	System.out.println(dateDue + " " + day + " " + month + " " + year);
+    	
+        GregorianCalendar cal = new GregorianCalendar(year, month-1, day);
         int nod = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
         int som = cal.get(GregorianCalendar.DAY_OF_WEEK);
         
         int row = new Integer((day+som-2)/7);
         int column  =  (day+som-2)%7;
         
-    	String eventLabel = tokens[0] + "\n" + newEvent;
-    	tableMCalendar.setValueAt(newEvent, row, column);
+    	//tableMCalendar.setValueAt(tokens[1] + "   " + newEvent, row, column);
+    	
+    	int [] rowColPair = new int[2];
+    	
+    	rowColPair[0] = row;
+    	rowColPair[1] = column;
+    	
+    	String dateStoreNoDelims = Integer.toString(month) + Integer.toString(year);
+    	String dateStoreNoDelimsDay = Integer.toString(day) + Integer.toString(month) + Integer.toString(year);
+    	
+    	List <Integer>  rowList = new ArrayList<Integer>();
+    	
+    	rowList.add((Integer)day);
+    	
+    	if(eventRowHash.containsKey(dateStoreNoDelims))
+    	{
+    		rowList.addAll( eventRowHash.get(dateStoreNoDelims));
+    	}
+    	
+
+    	
+    	
+    	
+    	eventRowHash.put(dateStoreNoDelims, rowList);
+    	eventNameHash.put(dateStoreNoDelimsDay, newEvent);
+    	
+    	calRefresh(month - 1, year);
+    	
     }
     
    

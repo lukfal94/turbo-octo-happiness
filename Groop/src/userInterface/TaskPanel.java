@@ -267,14 +267,18 @@ public class TaskPanel extends JPanel{
 						System.out.println(ex);
 					}
 					
-					if(response.getClass().equals(ServerResponse.class)) {
-						ServerResponse servResponse = (ServerResponse)response;
-						// TODO Error handling
-					} else if(response.getClass().equals(Task.class)) {
-						Task newTask = (Task)response;
-						sm.getActiveGroup().getTaskManager().addTask(newTask);
+					try{
+						if(response.getClass().equals(ServerResponse.class)) {
+							ServerResponse servResponse = (ServerResponse)response;
+							// TODO Error handling
+						} else if(response.getClass().equals(Task.class)) {
+							Task newTask = (Task)response;
+							sm.getActiveGroup().getTaskManager().addTask(newTask);
+						}
 					}
-					
+					catch(NullPointerException npe){
+						
+					}
 					System.out.println("Title: "+titleTextField.getText());
 					System.out.println("Descr: "+descriptionTextArea.getText());
 					System.out.println("Deadl: "+deadlineTextField.getText());
