@@ -1,10 +1,13 @@
 package userInterface;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -23,7 +26,7 @@ public class UserInfoPanel extends JPanel {
 		
 		this.setBackground(UIVisual.getGuiColor());
 	}
-	
+
 	private void initComponents() {
 		this.setLayout(null);
 		
@@ -39,7 +42,7 @@ public class UserInfoPanel extends JPanel {
 		fullnameLabel.setBounds(10, 10, 200, 25);
 		usernameLabel.setBounds(10, 45, 200, 20);
 		emailLabel.setBounds(10, 65, 200, 20);
-		
+
 		this.add(fullnameLabel);
 		this.add(usernameLabel);
 		this.add(emailLabel);
