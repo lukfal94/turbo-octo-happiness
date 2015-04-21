@@ -386,6 +386,7 @@ public class GroopMainInterface extends JFrame{
 		// TODO Auto-generated method stub
 		groupInfoPanel.refresh();
 		taskPanel.refresh();
+		calendarPanel.refresh();
 		menuBar.updateGroupMenu();
 	}
 

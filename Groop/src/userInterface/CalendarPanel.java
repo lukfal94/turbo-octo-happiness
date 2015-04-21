@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JCheckBox;
+
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -28,7 +30,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
@@ -76,7 +77,7 @@ public class CalendarPanel extends JPanel{
 		
 		this.add(testLabel);
 		
-		this.setBackground(Color.MAGENTA);
+		// this.setBackground(Color.MAGENTA);
 		this.initCalendar();
 	}
 	
@@ -94,12 +95,16 @@ public class CalendarPanel extends JPanel{
         mainFrame = new JFrame (""); //Create frame
         pane = mainFrame.getContentPane(); //Get content pane
         this.setLayout(new BorderLayout()); //Apply null layout
-        this.setPreferredSize((new Dimension(200, 200) ));
+        this.setPreferredSize( (new Dimension(200, 200) ));
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Close when X is clicked
         
         //Create controls
         monthLbl = new JLabel ("January");
+        monthLbl.setFont(new Font("Sans-Serif", Font.BOLD, 20));
+        
         yearLbl = new JLabel ("Change year:");
+        yearLbl.setFont(new Font("Sans-Serif", Font.ITALIC, 12));
+        
         yearBox = new JComboBox();
         prevBtn = new JButton ("<<");
         nextBtn = new JButton (">>");
@@ -108,6 +113,7 @@ public class CalendarPanel extends JPanel{
         tableSCale = new JScrollPane(calendarTable);
         calendarPanel = new JPanel(null);
         
+    
         //Set border
         
         //Register action listeners
@@ -116,7 +122,7 @@ public class CalendarPanel extends JPanel{
         yearBox.addActionListener(new yearBox_Action());
         
         //Add controls to pane
-        pane.add(this);
+        //pane.add(this);
         this.add(monthLbl);
         this.add(yearLbl);
         this.add(yearBox);
@@ -126,16 +132,22 @@ public class CalendarPanel extends JPanel{
         
         //Set bounds
         this.setBounds(0, 0, 300, 335);
-        monthLbl.setBounds(360-monthLbl.getPreferredSize().width/2, 300, 100, 25);
-        yearLbl.setBounds(210, 355, 80, 20);
-        yearBox.setBounds(430, 355, 80, 20);
+//        monthLbl.setBounds(360-monthLbl.getPreferredSize().width/2, 300, 100, 25);
+//        yearLbl.setBounds(210, 355, 100, 20);
+//        yearBox.setBounds(380, 355, 100, 20);
+//        prevBtn.setBounds(210, 400, 50, 25);
+//        nextBtn.setBounds(450, 400, 50, 25);
+//        tableSCale.setBounds(210, 50, 300, 250);
+        monthLbl.setBounds(0, 0, 100, 25);
+        yearLbl.setBounds(210, 355, 100, 20);
+        yearBox.setBounds(380, 355, 100, 20);
         prevBtn.setBounds(210, 400, 50, 25);
         nextBtn.setBounds(450, 400, 50, 25);
         tableSCale.setBounds(210, 50, 300, 250);
         
         //Make frame visible
-        mainFrame.setResizable(true);
-        mainFrame.setVisible(false);
+//        mainFrame.setResizable(true);
+//        mainFrame.setVisible(false);
         
         //Get real month/year
         GregorianCalendar cal = new GregorianCalendar(); //Create calendar
@@ -151,7 +163,8 @@ public class CalendarPanel extends JPanel{
             tableMCalendar.addColumn(headers[i]);
         }
         
-        calendarTable.getParent().setBackground(calendarTable.getBackground()); //Set background
+        //calendarTable.getParent().setBackground(calendarTable.getBackground()); //Set background
+        calendarTable.getParent().setBackground(UIVisual.guiColor);
         
         //No resize/reorder
         calendarTable.getTableHeader().setResizingAllowed(false);
@@ -432,7 +445,6 @@ public class CalendarPanel extends JPanel{
         }
     }
     
-
     static class yearBox_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (yearBox.getSelectedItem() != null){
@@ -442,6 +454,7 @@ public class CalendarPanel extends JPanel{
             }
         }
     }
+    
     static class nextBtn_Action implements ActionListener{
         public void actionPerformed (ActionEvent e){
             if (mthCur == 11){ //Foward one year
@@ -493,15 +506,14 @@ public class CalendarPanel extends JPanel{
     	{
     		rowList.addAll( eventRowHash.get(dateStoreNoDelims));
     	}
-    	
-
-    	
-    	
-    	
+    		
     	eventRowHash.put(dateStoreNoDelims, rowList);
     	eventNameHash.put(dateStoreNoDelimsDay, newEvent);
     	
     	calRefresh(month - 1, year);
-    	
+    }
+    
+    public void refresh() {
+    	calRefresh(mthCur, yearReal);
     }
 }

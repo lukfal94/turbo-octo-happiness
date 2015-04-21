@@ -19,14 +19,14 @@ public class UserInfoPanel extends JPanel {
 		this.sessionManager = sm;
 		initComponents();
 		
-		this.setBackground(UIVisual.getGuiColor());
+		this.setBackground(UIVisual.guiColor);
 	}
 
 	private void initComponents() {
 		this.setLayout(null);
 		
 		fullnameLabel = new JLabel(sessionManager.getActiveUser().getFullname());
-		fullnameLabel.setFont(new Font("Sans-Serif Italic", Font.BOLD, 24));
+		fullnameLabel.setFont(UIVisual.titleFont);
 		
 		usernameLabel = new JLabel(sessionManager.getActiveUser().getUsername());
 		usernameLabel.setFont(new Font("Sans-Serif", Font.ITALIC, 16));

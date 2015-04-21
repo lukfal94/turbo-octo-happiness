@@ -1,11 +1,9 @@
 package userInterface;
 
 import java.awt.Color;
+import java.awt.Font;
 
 public class UIVisual {
-	private static Color guiColor = new Color(131, 204, 237);
-	
-	public static Color getGuiColor() {
-		return guiColor;
-	}
+	public static Color guiColor = new Color(131, 204, 237);
+	public static Font titleFont = new Font("Sans-Serif", Font.BOLD, 24);
 }

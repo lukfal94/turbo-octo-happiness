@@ -66,14 +66,14 @@ public class TaskPanel extends JPanel{
 		
 		taskScrollPanel = new JPanel();
 		taskScrollPanel.setLayout(null);
-		taskScrollPanel.setBackground(Color.GREEN);
+		taskScrollPanel.setBackground(Color.DARK_GRAY);
 		
 		scrollPane = new JScrollPane(taskScrollPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBounds(40, 60, 319, 300);
 
 		titleLabel = new JLabel("<html><h1 style='text-align: center;'>Tasks</h1></html>");
-		titleLabel.setFont(new Font("Sans serif", 0, 20));
-		titleLabel.setBackground(Color.RED);
+		titleLabel.setFont(UIVisual.titleFont);
+		
 		titleLabel.setSize(new Dimension(300, 50));
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		titleLabel.setBounds(50, 0, 300, 50);
@@ -96,7 +96,7 @@ public class TaskPanel extends JPanel{
 			taskScrollPanel.setPreferredSize(new Dimension(300, 100 * i));
 		}
 		
-		this.setBackground(Color.CYAN);
+		this.setBackground(UIVisual.guiColor);
 		
 		this.add(titleLabel);
 		this.add(scrollPane);
@@ -112,7 +112,7 @@ public class TaskPanel extends JPanel{
 		this.taskScrollPanel = new JPanel();
 		
 		taskScrollPanel.setLayout(null);
-		taskScrollPanel.setBackground(Color.GREEN);
+		taskScrollPanel.setBackground(Color.DARK_GRAY);
 		
 		// Populate the tasks		
 		int i = 0;
@@ -165,7 +165,7 @@ public class TaskPanel extends JPanel{
 			
 			initComponents();
 			this.setBorder(border);
-			this.setBackground(Color.RED);
+			this.setBackground(Color.GRAY);
 		}
 		
 		private void initComponents() {

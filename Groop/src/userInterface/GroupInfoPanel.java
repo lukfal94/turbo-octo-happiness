@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import databaseComm.ServerResponse;
 import social.Group;
@@ -28,7 +29,7 @@ public class GroupInfoPanel extends JPanel {
 	private SessionManager sessionManager;
 
 	private JLabel groupName;
-	private JLabel groupDescription;
+	private JTextArea groupDescription;
 	
 	// Layout
 	private GridBagLayout gbLayout;
@@ -40,18 +41,27 @@ public class GroupInfoPanel extends JPanel {
 	
 	public GroupInfoPanel(SessionManager sm) {
 		this.sessionManager = sm;
+		this.setLayout(null);
 		
 		if(sessionManager.getGuiMode() == GuiMode.STANDARD)
 			initComponents();
 		
-		this.setBackground(Color.BLUE);
+		this.setBackground(UIVisual.guiColor);
 	}
 	
 	private void initComponents() {
-		groupName = new JLabel(sessionManager.getActiveGroup().getName());
-		groupName.setFont(new Font("Serif", Font.PLAIN, 24));
+		groupName = new JLabel("<html><p style='text-align: cetner;'>"+sessionManager.getActiveGroup().getName()+"</p></html>");
+		groupName.setHorizontalAlignment(SwingConstants.CENTER);
+		groupName.setFont(UIVisual.titleFont);
 		
-		groupDescription = new JLabel(sessionManager.getActiveGroup().getDescription());
+		groupDescription = new JTextArea(sessionManager.getActiveGroup().getDescription());
+		groupDescription.setEditable(false);
+		groupDescription.setLineWrap(true);
+		groupDescription.setWrapStyleWord(true);
+		groupDescription.setBackground(UIVisual.guiColor);
+		
+		groupName.setBounds(125, 10, 250, 30);
+		groupDescription.setBounds(50, 45, 400, 150);
 		
 		this.add(groupName);
 		this.add(groupDescription);

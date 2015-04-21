@@ -60,11 +60,12 @@ public class ActivityPanel extends JPanel{
 	public ActivityPanel(SessionManager sm) {
 		//this.setSize(400, 350);
 		this.setLayout(null);
+		this.setBackground(UIVisual.guiColor);
 		
 		this.sessionManager = sm;
 		
 		activityTitle = new JLabel("<html><h1 style='text-align: center;'>Activity</h1></html>");
-		activityTitle.setFont(new Font("Sans serif", 0, 20));
+		activityTitle.setFont(UIVisual.titleFont);
 		activityTitle.setSize(new Dimension(400, 50));
 		activityTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		
