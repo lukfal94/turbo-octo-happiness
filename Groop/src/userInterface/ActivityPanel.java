@@ -376,6 +376,9 @@ public class ActivityPanel extends JPanel{
 						}
 					}
 				}
+				
+				// close window upon submitting
+				close();
 			}
 		}
 		
