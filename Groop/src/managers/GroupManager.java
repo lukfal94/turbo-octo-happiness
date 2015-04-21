@@ -77,7 +77,6 @@ public class GroupManager {
 			for(Group g : this.groups) {
 				g.syncMembers();
 			}
-			
 			return ServerErrorMessage.NO_ERROR;
 		} catch (Exception ex) {
 			response = mapper.readValue(jsonUrl, ServerResponse.class);
@@ -118,6 +117,30 @@ public class GroupManager {
 		}
 			
 		return response.getServerErrorMessage();
+	}
+
+	public Object addUser(User activeUser, String text) throws JsonParseException, JsonMappingException, IOException {
+		ServerResponse response = null;
+		URL jsonUrl = null;
+
+		String urlStr = "http://www.lukefallon.com/groop/api/groups.php?mode=2&gname=" + text + "&uid=" + activeUser.getId();
+
+		URL url = new URL(urlStr);
+		try {
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			jsonUrl = uri.toURL();
+		} catch ( Exception ex) {
+			System.out.println("Error parsing url");
+		}
+		
+		try {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response;
+		} catch(Exception ex) {
+			System.out.println(ex);
+			System.out.println("Fatal error adding user");
+			return null;
+		}
 	}
 
 }

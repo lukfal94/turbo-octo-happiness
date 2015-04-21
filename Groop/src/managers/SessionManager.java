@@ -22,6 +22,10 @@ public class SessionManager {
 	
 	private GroopMainInterface mainGUI;
 	
+	public GroopMainInterface getMainGUI() {
+		return mainGUI;
+	}
+
 	public SessionManager(User user) {
 		this.activeUser = user;
 		
@@ -57,7 +61,7 @@ public class SessionManager {
 				try {
 					syncStatus = g.getTaskManager().syncTasks(g);
 				} catch( Exception ex) {
-					System.out.println(">>" + ex);
+					System.out.println(">> SM:64 " + ex);
 					System.out.println("Error: Could not sync tasks for group");
 				}
 			}
@@ -98,10 +102,12 @@ public class SessionManager {
 	public void switchGroup(Group group) {
 		// TODO Auto-generated method stub
 		this.activeGroup = group;
+		mainGUI.refreshInterface();
 	}
 
 	public void refreshSession() {
 		// TODO Auto-generated method stub
+		this.startSession();
 		mainGUI.refreshInterface();
 	}
 

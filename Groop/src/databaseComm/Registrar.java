@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
-import java.util.Date;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -15,6 +14,7 @@ import social.Group;
 import userInterface.LoginWindow;
 import util.Task;
 import util.Task.TaskPriority;
+import util.Date;
 
 // Communicates w/ the Database to verify user when logging in, or
 // to register a new user if they are not in the database.
@@ -81,7 +81,9 @@ public class Registrar {
 		
 		String urlStr = "http://www.lukefallon.com/groop/api/tasks.php?mode=0&gid=" + group.getId()
 				+ "&uid=" + user.getId() + "&title=" + title + "&desc=" + description 
-				+ "&dline=" + deadline.toString() + "&prior=" + priority;
+				+ "&year=" + deadline.getYear() + "&month=" + deadline.monthToInt() + 
+				"&day=" + deadline.getDay() + "&hour=" + deadline.getHour() + 
+				"&min=" + deadline.getMinute() + "&prior=" + priority;
 
 		URL url = new URL(urlStr);
 		try {
@@ -90,6 +92,8 @@ public class Registrar {
 		} catch ( Exception ex) {
 			System.out.println("Error parsing url");
 		}
+		
+		System.out.println(jsonUrl);
 		
 		try {
 			task = mapper.readValue(jsonUrl, Task.class);

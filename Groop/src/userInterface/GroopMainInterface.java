@@ -72,7 +72,7 @@ public class GroopMainInterface extends JFrame{
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		
 		menuBar = new GroopMenuBar();
-		menuBar.initMenuBar();
+		
 		this.setJMenuBar(menuBar);
 		
 		initComponents();
@@ -94,41 +94,13 @@ public class GroopMainInterface extends JFrame{
 	private class GroopMenuBar extends JMenuBar {
 		private JMenu fileMenu, newMenu, editMenu, groupMenu, switchGroupMenu, membersMenu;
 		private JMenuItem menuItem;
-	
-		public void updateGroupMenu() {
-			// Delete old menu
-			menuBar.remove(groupMenu);
-			System.out.println("Deleted old menu");
-			
-			// Build Group menu
-			groupMenu = new JMenu("Group");
-			groupMenu.setMnemonic(KeyEvent.VK_G);
-			
-			switchGroupMenu = new JMenu("Switch to");
-
-			for(Group g : sessionManager.getGroups()) {
-				menuItem = new GroupMenuItem(g);
-				menuItem.addActionListener(new MenuActionListener());
-				switchGroupMenu.add(menuItem);
-			}
-			
-			groupMenu.add(switchGroupMenu);
-			
-			menuItem = new JMenuItem("Invite User");
-			menuItem.addActionListener(new MenuActionListener());
-			groupMenu.add(menuItem);
-			
-			menuItem = new JMenuItem("Delete Group");
-			menuItem.addActionListener(new MenuActionListener());
-			
-			System.out.println("Constructed new menu");
-			
-			groupMenu.add(menuItem);
-			
-			menuBar.add(groupMenu);
+		
+		public GroopMenuBar() {
+			initMenuBar();
 		}
 		
-		public void initMenuBar() {
+		private void initMenuBar() {
+			
 			// Build File menu
 			fileMenu = new JMenu("File");
 			fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -151,24 +123,28 @@ public class GroopMainInterface extends JFrame{
 			menuItem.addActionListener(new MenuActionListener());
 			newMenu.add(menuItem);
 			
-			menuItem = new JMenuItem("Quit");
-			menuItem.addActionListener(new MenuActionListener());
-			
 			fileMenu.add(newMenu);
+			
+			menuItem = new JMenuItem("Join Group");
+			menuItem.addActionListener(new MenuActionListener());
 			fileMenu.add(menuItem);
 			
+			menuItem = new JMenuItem("Quit");
+			menuItem.addActionListener(new MenuActionListener());
+			fileMenu.add(menuItem);			
+			
 			// Build Edit menu
-			editMenu = new JMenu("Edit");
-			editMenu.setMnemonic(KeyEvent.VK_E);
-			
-			menuItem = new JMenuItem("Profile");
-			menuItem.addActionListener(new MenuActionListener());
-			editMenu.add(menuItem);
-			
-			menuItem = new JMenuItem("Group Info");
-			menuItem.addActionListener(new MenuActionListener());
-			editMenu.add(menuItem);
-			
+//			editMenu = new JMenu("Edit");
+//			editMenu.setMnemonic(KeyEvent.VK_E);
+//			
+//			menuItem = new JMenuItem("Profile");
+//			menuItem.addActionListener(new MenuActionListener());
+//			editMenu.add(menuItem);
+//			
+//			menuItem = new JMenuItem("Group Info");
+//			menuItem.addActionListener(new MenuActionListener());
+//			editMenu.add(menuItem);
+//			
 //			menuItem = new JMenuItem("Task");
 //			menuItem.addActionListener(new MenuActionListener());
 //			editMenu.add(menuItem);
@@ -176,23 +152,23 @@ public class GroopMainInterface extends JFrame{
 //			menuItem = new JMenuItem("Activity");
 //			menuItem.addActionListener(new MenuActionListener());
 //			editMenu.add(menuItem);
-			
-			
+				
 			// Build Group menu
 			groupMenu = new JMenu("Group");
 			groupMenu.setMnemonic(KeyEvent.VK_G);
 			
-			switchGroupMenu = new JMenu("Switch to");
-
-			for(Group g : sessionManager.getGroups()) {
-				menuItem = new GroupMenuItem(g);
-				menuItem.addActionListener(new MenuActionListener());
-				switchGroupMenu.add(menuItem);
-			}
-			groupMenu.add(switchGroupMenu);
-			
-			
 			if(sessionManager.getGuiMode().equals(GuiMode.STANDARD)) {
+				// Build the switch to group menu
+				switchGroupMenu = new JMenu("Switch to");
+		
+				for(Group g : sessionManager.getGroups()) {
+					menuItem = new GroupMenuItem(g);
+					menuItem.addActionListener(new MenuActionListener());
+					switchGroupMenu.add(menuItem);
+				}
+				groupMenu.add(switchGroupMenu);
+			
+				// List of members in current group
 				membersMenu = new JMenu("Members");
 			
 				for(User u : sessionManager.getActiveGroup().getMembers()) {
@@ -200,23 +176,74 @@ public class GroopMainInterface extends JFrame{
 					membersMenu.add(menuItem);
 				}
 				groupMenu.add(membersMenu);
+				
+				menuItem = new JMenuItem("Invite User");
+				menuItem.addActionListener(new MenuActionListener());
+				groupMenu.add(menuItem);
+				
+				menuItem = new JMenuItem("Delete Group");
+				menuItem.addActionListener(new MenuActionListener());
+				groupMenu.add(menuItem);
+				
+			} else if(sessionManager.getGuiMode().equals(GuiMode.BLANK)) {
+				menuItem = new JMenuItem("New Group");
+				menuItem.addActionListener(new MenuActionListener());
+				groupMenu.add(menuItem);
 			}
-			
-			menuItem = new JMenuItem("Invite User");
-			menuItem.addActionListener(new MenuActionListener());
-			groupMenu.add(menuItem);
-			
-			menuItem = new JMenuItem("Delete Group");
-			menuItem.addActionListener(new MenuActionListener());
-			groupMenu.add(menuItem);
-			
+	
 			this.add(fileMenu);
-			this.add(editMenu);
+			//this.add(editMenu);
 			this.add(groupMenu);
 //			
 //			fileMenu.add()
 		}
 		
+		public void updateGroupMenu() {
+			// Delete old menu
+			menuBar.remove(groupMenu);
+			
+			// Build Group menu
+			groupMenu = new JMenu("Group");
+			groupMenu.setMnemonic(KeyEvent.VK_G);
+			
+			if(sessionManager.getGuiMode().equals(GuiMode.STANDARD)) {
+				// Build the switch to group menu
+				switchGroupMenu = new JMenu("Switch to");
+		
+				for(Group g : sessionManager.getGroups()) {
+					menuItem = new GroupMenuItem(g);
+					menuItem.addActionListener(new MenuActionListener());
+					switchGroupMenu.add(menuItem);
+				}
+				groupMenu.add(switchGroupMenu);
+			
+				// List of members in current group
+				membersMenu = new JMenu("Members");
+			
+				for(User u : sessionManager.getActiveGroup().getMembers()) {
+					menuItem = new JMenuItem(u.getUsername());
+					membersMenu.add(menuItem);
+				}
+				groupMenu.add(membersMenu);
+				
+				menuItem = new JMenuItem("Invite User");
+				menuItem.addActionListener(new MenuActionListener());
+				groupMenu.add(menuItem);
+				
+				menuItem = new JMenuItem("Delete Group");
+				menuItem.addActionListener(new MenuActionListener());
+				groupMenu.add(menuItem);
+				
+			} else if(sessionManager.getGuiMode().equals(GuiMode.BLANK)) {
+				menuItem = new JMenuItem("New Group");
+				menuItem.addActionListener(new MenuActionListener());
+				groupMenu.add(menuItem);
+			}
+			
+			menuBar.add(groupMenu);
+			
+			GroopMainInterface.this.setJMenuBar(menuBar);
+		}
 	}
 	
 	
@@ -311,6 +338,9 @@ public class GroopMainInterface extends JFrame{
 			else if(e.getActionCommand().equals("Invite User")) {
 				InviteUserWindow userWindow = new InviteUserWindow(sessionManager);
 			}
+			else if(e.getActionCommand().equals("Join Group")) {
+				JoinGroupWindow groupWindow = new JoinGroupWindow(sessionManager);
+			}
 			else if(e.getActionCommand().equals("Delete Group")) {
 				int n = JOptionPane.showConfirmDialog(GroopMainInterface.this, "<html><p style='width: 300px;'>Are you sure you wish to delete: \"" + sessionManager.getActiveGroup().getName() 
 						+ "\"? This action can not be undone!</html></p>",
@@ -355,6 +385,7 @@ public class GroopMainInterface extends JFrame{
 	public void refreshInterface() {
 		// TODO Auto-generated method stub
 		groupInfoPanel.refresh();
+		taskPanel.refresh();
 		menuBar.updateGroupMenu();
 	}
 

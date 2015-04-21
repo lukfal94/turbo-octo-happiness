@@ -1,11 +1,6 @@
 package userInterface;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;

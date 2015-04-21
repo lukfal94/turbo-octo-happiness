@@ -46,13 +46,11 @@ public class TaskManager{
 		ObjectMapper mapper = new ObjectMapper();
 		ServerResponse response = null;
 		List<Task> tasks = null;
-		
-		System.out.println("Syncing tasks...");
+
 		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=2&gid=" + g.getId());
 
 		try {
-			tasks = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Task>>() { });
-			
+			tasks = mapper.readValue(jsonUrl, new TypeReference<ArrayList<Task>>() { });	
 			this.tasks = (ArrayList<Task>) tasks;
 			return ServerErrorMessage.NO_ERROR;
 		} catch (Exception ex) {
