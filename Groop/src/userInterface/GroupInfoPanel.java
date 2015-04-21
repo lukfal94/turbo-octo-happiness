@@ -45,12 +45,33 @@ public class GroupInfoPanel extends JPanel {
 		
 		if(sessionManager.getGuiMode() == GuiMode.STANDARD)
 			initComponents();
+		else
+			initBlankComponents();
 		
 		this.setBackground(UIVisual.guiColor);
 	}
-	
+
+	private void initBlankComponents() {
+		// TODO Auto-generated method stub
+		groupName = new JLabel("<html><p style='text-align: center;'>"+"</p></html>");
+		groupName.setHorizontalAlignment(SwingConstants.CENTER);
+		groupName.setFont(UIVisual.titleFont);
+		
+		groupDescription = new JTextArea();
+		groupDescription.setEditable(false);
+		groupDescription.setLineWrap(true);
+		groupDescription.setWrapStyleWord(true);
+		groupDescription.setBackground(UIVisual.guiColor);
+		
+		groupName.setBounds(125, 10, 250, 30);
+		groupDescription.setBounds(50, 45, 400, 150);
+		
+		this.add(groupName);
+		this.add(groupDescription);
+	}
+
 	private void initComponents() {
-		groupName = new JLabel("<html><p style='text-align: cetner;'>"+sessionManager.getActiveGroup().getName()+"</p></html>");
+		groupName = new JLabel("<html><p style='text-align: center;'>"+sessionManager.getActiveGroup().getName()+"</p></html>");
 		groupName.setHorizontalAlignment(SwingConstants.CENTER);
 		groupName.setFont(UIVisual.titleFont);
 		

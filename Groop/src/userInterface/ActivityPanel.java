@@ -40,6 +40,7 @@ import javax.swing.event.ListSelectionListener;
 
 import managers.SessionManager;
 import social.User;
+import userInterface.ActivityPanel.ActivityWindowMode;
 import util.Activity;
 import util.Task;
 import util.Task.TaskPriority;
@@ -112,7 +113,7 @@ public class ActivityPanel extends JPanel{
 	}
 	
 	public enum ActivityWindowMode {
-		NEW_ACTIVITY, EDIT_ACTIVITY
+		NEW_ACTIVITY, EDIT_ACTIVITY, NEW_FROM_TASK
 	}
 	
 	private class ActivityListSelect implements ListSelectionListener {
@@ -163,11 +164,18 @@ public class ActivityPanel extends JPanel{
 		}
 	}
 	
+	public void openActivityWindow(ActivityWindowMode newActivity, Task task) {
+		// TODO Auto-generated method stub
+		ActivityWindow aw = new ActivityWindow(newActivity, task);
+	}
+	
 	public void openActivityWindow(ActivityWindowMode mode) {
 		ActivityWindow aw = new ActivityWindow(mode);
 	}
 
 	private class ActivityWindow extends JFrame {
+		private Task currTask;
+		
 		private JPanel activityWindowPanel;
 		private ActivityWindowMode currMode;
 		
@@ -175,12 +183,16 @@ public class ActivityPanel extends JPanel{
 		private JLabel selectTaskLabel;
 		private JLabel timeSpentLabel;
 		private JLabel descriptionLabel;
+		private JLabel hrLabel;
+		private JLabel minLabel;
 		
 		// Input Elements
-		private JComboBox<Task> taskComboBox;
+		private JComboBox<TaskSelector> taskComboBox;
 		private JTextArea descriptionTextArea;
 		private JSpinner timeSpentSpinner;
 		private JCheckBox verifyCheckBox;
+		private JTextField hrTextField;
+		private JTextField minTextField;
 		
 		// Action Buttons
 		private JButton submitButton;
@@ -190,17 +202,14 @@ public class ActivityPanel extends JPanel{
 		
 		// Layout members
 		private BorderLayout borderLayout = new BorderLayout();
-		private GridBagLayout gbLayout = new GridBagLayout();
-		private GridBagConstraints gbC = new GridBagConstraints();
+
+		private JLabel taskLabel;
 		
 		public ActivityWindow(ActivityWindowMode mode) {
 			this.currMode = mode;
 			this.setLayout(borderLayout);
 			
 			activityInd = activityList.getSelectedIndex();
-			
-			// Init Common Elements
-			initCommon();
 			
 			// Init Elements Unique to Window Mode
 			switch(mode) {
@@ -210,9 +219,12 @@ public class ActivityPanel extends JPanel{
 				case EDIT_ACTIVITY:
 					initEditActivityWindow();
 					break;
+				case NEW_FROM_TASK:
+					initFromTaskWindow();
+					break;
 			}
 			
-			this.setSize(500, 400);
+			this.setSize(400, 250);
 			
 			// Center the frame in the screen
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -221,30 +233,70 @@ public class ActivityPanel extends JPanel{
 			this.setVisible(true);
 		}
 
-		private void initCommon() {
+		public ActivityWindow(ActivityWindowMode mode, Task task) {
+			// TODO Auto-generated constructor stub
+			this.currMode = mode;
+			this.setLayout(borderLayout);
+			
+			activityInd = activityList.getSelectedIndex();
+			
+			// Init Elements Unique to Window Mode
+			switch(mode) {
+				case NEW_ACTIVITY:
+					initNewActivityWindow();
+					break;
+				case EDIT_ACTIVITY:
+					initEditActivityWindow();
+					break;
+				case NEW_FROM_TASK:
+					initFromTaskWindow();
+					break;
+			}
+			
+			this.setSize(400, 250);
+			
+			// Center the frame in the screen
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+
+			this.setVisible(true);
+		}
+		
+		private class TaskSelector {
+			private Task task;
+			
+			public TaskSelector(Task t) {
+				this.task = t;
+			}
+			
+			public Task getTask() {
+				return this.task;
+			}
+			
+			@Override
+			public String toString() {
+				return this.task.getTitle();
+			}
+		}
+		
+		private void initFromTaskWindow() {
+			// TODO Auto-generated method stub
 			activityWindowPanel = new JPanel();
 			activityWindowPanel.setBackground(Color.GRAY);;
 			
-			// Init layout tools
-			gbLayout = new GridBagLayout();
-			gbC = new GridBagConstraints();
+			activityWindowPanel.setLayout(null);
 			
-			gbC.fill = GridBagConstraints.HORIZONTAL;
-			
-			activityWindowPanel.setLayout(gbLayout);
-			
-			// Initialize field label
-			selectTaskLabel = new JLabel("Select a Task", SwingConstants.RIGHT);
-			timeSpentLabel = new JLabel("Time Spend", SwingConstants.RIGHT);
+			// Initialize field labels
+			taskLabel = new JLabel("Task", SwingConstants.RIGHT);
+			timeSpentLabel = new JLabel("Time Spent", SwingConstants.RIGHT);
 			descriptionLabel = new JLabel("Description", SwingConstants.RIGHT);
-			verifyCheckBox = new JCheckBox("Verified");
-			
+//			verifyCheckBox = new JCheckBox("Verified");
 			
 			// Init input fields
 			descriptionTextArea = new JTextArea(3, 30);
-			taskComboBox = new JComboBox<Task>();
-			for(Task t : sessionManager.getActiveUser().getAssignedTasks()) {
-				taskComboBox.addItem(t);
+			taskComboBox = new JComboBox<TaskSelector>();
+			for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
+				taskComboBox.addItem(new TaskSelector(t));
 			}
 			timeSpentSpinner = new JSpinner();
 			
@@ -257,39 +309,77 @@ public class ActivityPanel extends JPanel{
 			descriptionTextArea.setLineWrap(true);
 			descriptionTextArea.setWrapStyleWord(true);
 			
-			
-			/*
-			 * How we'll parse date
-			String s = "03/24/2013 21:54";
-	        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-			
-	        try {
-	        	Date exDate = simpleDateFormat.parse(s);
-		        System.out.println(exDate);
-	        } catch(Exception ex) {
-	        	System.out.println("Ooops");
-	        }
-	        */
-	        
-			this.addComponent(0, 0, 3, 1, gbC, activityWindowPanel, selectTaskLabel);
-			this.addComponent(3, 0, 5, 1, gbC, activityWindowPanel, taskComboBox);
-			this.addComponent(0, 1, 3, 1, gbC, activityWindowPanel, descriptionLabel);
-			this.addComponent(3, 1, 6, 2, gbC, activityWindowPanel, descriptionTextArea);
-			this.addComponent(0, 2, 3, 1, gbC, activityWindowPanel, timeSpentLabel);
-			this.addComponent(3, 2, 5, 1, gbC, activityWindowPanel, timeSpentSpinner);
-			this.addComponent(0, 4, 2, 1, gbC, activityWindowPanel, cancelButton);
-			this.addComponent(2, 4, 3, 1, gbC, activityWindowPanel, submitButton);
-			
 			// admins have access to verify checkbox
-			if (sessionManager.getActiveGroup().getAdmins().contains(sessionManager.getActiveUser()))
-				this.addComponent(0, 3, 3, 1, gbC, activityWindowPanel, verifyCheckBox);
-			
+//			if (sessionManager.getActiveGroup().getAdmins().contains(sessionManager.getActiveUser()))
+//				this.addComponent(0, 3, 3, 1, gbC, activityWindowPanel, verifyCheckBox);
+//			
 			this.add(activityWindowPanel, BorderLayout.CENTER);
 		}
 		
 		// Initializes the components for the "New Activity" window
 		private void initNewActivityWindow() {
-
+			activityWindowPanel = new JPanel();
+			activityWindowPanel.setBackground(Color.GRAY);;
+			
+			activityWindowPanel.setLayout(null);
+			
+			// Initialize field label
+			selectTaskLabel = new JLabel("Select a Task", SwingConstants.RIGHT);
+			timeSpentLabel = new JLabel("Time Spent", SwingConstants.RIGHT);
+			hrLabel = new JLabel("Hr");
+			minLabel = new JLabel("Min");
+			descriptionLabel = new JLabel("Description", SwingConstants.RIGHT);
+//			verifyCheckBox = new JCheckBox("Verified");
+			
+			// Init input fields
+			hrTextField = new JTextField(3);
+			minTextField = new JTextField(2);
+			descriptionTextArea = new JTextArea(3, 30);
+			taskComboBox = new JComboBox<TaskSelector>();
+			for(Task t : sessionManager.getActiveGroup().getTaskManager().getTasks()) {
+				taskComboBox.addItem(new TaskSelector(t));
+			}
+			
+			
+			submitButton = new JButton("Submit");
+			submitButton.addActionListener(new SubmitButtonPress());
+			
+			cancelButton = new JButton("Cancel");
+			cancelButton.addActionListener(new CancelButtonPress());
+			
+			descriptionTextArea.setLineWrap(true);
+			descriptionTextArea.setWrapStyleWord(true);
+			
+			selectTaskLabel.setBounds(15, 15, 100, 20);
+			taskComboBox.setBounds(120, 15, 150, 20);
+			timeSpentLabel.setBounds(15, 40, 100, 20);
+			hrTextField.setBounds(120, 40, 30, 20);
+			hrLabel.setBounds(155, 40, 20, 20);
+			minTextField.setBounds(180, 40, 30, 20);
+			minLabel.setBounds(215, 40, 30, 20);
+			descriptionLabel.setBounds(15, 65, 100, 20);
+			descriptionTextArea.setBounds(120, 65, 200, 100);
+			submitButton.setBounds(175, 170, 50, 20);
+			
+			// timeSpentLabel.setBounds()
+			
+			// admins have access to verify checkbox
+//			if (sessionManager.getActiveGroup().getAdmins().contains(sessionManager.getActiveUser()))
+//				this.addComponent(0, 3, 3, 1, gbC, activityWindowPanel, verifyCheckBox);
+//			
+			this.add(selectTaskLabel);
+			this.add(taskComboBox);
+			this.add(timeSpentLabel);
+			this.add(hrLabel);
+			this.add(hrTextField);
+			this.add(minLabel);
+			this.add(minTextField);
+			this.add(descriptionLabel);
+			this.add(descriptionTextArea);
+			this.add(submitButton);
+			
+			this.add(activityWindowPanel, BorderLayout.CENTER);
+			
 			this.setTitle("Create a New Activity");
 		 
 		}
@@ -307,17 +397,6 @@ public class ActivityPanel extends JPanel{
 			verifyCheckBox.setSelected(act.isVerified());
 			
 		}
-
-		
-		private void addComponent(int x, int y, int w, int h, GridBagConstraints c, Container aContainer, Component aComponent )  
-		{  
-		    c.gridx = x;  
-		    c.gridy = y;  
-		    c.gridwidth = w;  
-		    c.gridheight = h;
-		    gbLayout.setConstraints( aComponent, c );  
-		    aContainer.add( aComponent );  
-		} 
 		
 		private class SubmitButtonPress implements ActionListener {
 			private Registrar registrar = new Registrar();
@@ -332,10 +411,6 @@ public class ActivityPanel extends JPanel{
 					
 				else if (descriptionTextArea.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Please give a description.", "No Description", JOptionPane.INFORMATION_MESSAGE);
-				}
-				
-				else if ((int) timeSpentSpinner.getValue() < 1) {
-					JOptionPane.showMessageDialog(null, "Please give an amount of time.", "No Time Spent", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
 				else {

@@ -384,6 +384,7 @@ public class GroopMainInterface extends JFrame{
 
 	public void refreshInterface() {
 		// TODO Auto-generated method stub
+		sessionManager.refreshSession();
 		groupInfoPanel.refresh();
 		taskPanel.refresh();
 		calendarPanel.refresh();
@@ -403,5 +404,10 @@ public class GroopMainInterface extends JFrame{
 	    c.gridheight = h;
 	    gbLayout.setConstraints( aComponent, c );  
 	    aContainer.add( aComponent );  
+	}
+
+	public void setGroupInfoPanel(GroupInfoPanel groupInfoPanel2) {
+		// TODO Auto-generated method stub
+		this.groupInfoPanel = groupInfoPanel2;
 	} 
 }

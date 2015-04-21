@@ -37,6 +37,7 @@ import databaseComm.Registrar;
 import databaseComm.ServerResponse;
 import managers.SessionManager;
 import social.User;
+import userInterface.ActivityPanel.ActivityWindowMode;
 import userInterface.GroopMainInterface.GuiMode;
 import util.Task;
 import util.Date;
@@ -264,6 +265,7 @@ public class TaskPanel extends JPanel{
 				}
 				
 			} else if(e.getActionCommand().equals("A")) {
+				sessionManager.getMainGUI().getActivityPanel().openActivityWindow(ActivityWindowMode.NEW_ACTIVITY);
 				
 			} else if(e.getActionCommand().equals("C")) {
 				

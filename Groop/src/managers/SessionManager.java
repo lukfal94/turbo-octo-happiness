@@ -108,7 +108,6 @@ public class SessionManager {
 	public void refreshSession() {
 		// TODO Auto-generated method stub
 		this.startSession();
-		mainGUI.refreshInterface();
 	}
 
 	public void setMainGUI(GroopMainInterface groopMainInterface) {
