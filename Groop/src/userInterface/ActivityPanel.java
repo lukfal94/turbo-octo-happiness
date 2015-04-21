@@ -356,23 +356,28 @@ public class ActivityPanel extends JPanel{
 						// TODO Error handling
 					} else if(response.getClass().equals(Activity.class)) {
 						
-						// activity was created
+						Activity act = new Activity();
+						act.setTask(taskComboBox.getSelectedObject());
+						act.setUser(sessionManager.getActiveUser());
+						act.setTimeSpend(timeSpentSpinner.getValue());
+						act.setTimeStamp(new Date());
+						act.setVerified(verifyCheckBox.isSelected());
+						act.setDescription(descriptionTextArea.getText());
+						
 						if (currMode == ActivityWindowMode.NEW_ACTIVITY) {
-							Activity newActivity = (Activity) response;
-							newActivity.setTimeStamp(new Date());
+							
 							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-							sm.getActiveGroup().getActivityManager().addActivity(newActivity);
-							listModel.addElement(newActivity.getTask().getTitle() + "\n" + newActivity.getUser().getUsername() + " - " + dateFormat.format(newActivity.getTimeStamp()));
+							sm.getActiveGroup().getActivityManager().addActivity(act);
+							listModel.addElement(act.getTask().getTitle() + "\n" + act.getUser().getUsername() + " - " + dateFormat.format(act.getTimeStamp()));
 					
 						}
 						
 						// activity was edited
 						else {
-							Activity editActivity = (Activity) response;
-							editActivity.setTimeStamp(new Date());
+							
 							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-							sm.getActiveGroup().getActivityManager().getActivityLog().set(activityInd, editActivity);
-							listModel.set(activityInd, editActivity.getTask().getTitle() + "\n" + editActivity.getUser().getUsername() + " - " + dateFormat.format(editActivity.getTimeStamp()));
+							sm.getActiveGroup().getActivityManager().getActivityLog().set(activityInd, act);
+							listModel.set(activityInd, act.getTask().getTitle() + "\n" + act.getUser().getUsername() + " - " + dateFormat.format(act.getTimeStamp()));
 						}
 					}
 				}
