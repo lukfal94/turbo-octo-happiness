@@ -199,6 +199,12 @@ public class TaskPanel extends JPanel{
 			assignedToComboBox = new JComboBox<String>();
 			assignedToComboBox.setBounds(105, 75, 100, 25);
 			
+			if(task.getAssignedTo() != null) {
+				for(User u : task.getAssignedTo()) {
+					assignedToComboBox.addItem(u.getUsername());
+				}	
+			}
+
 			gotItButton = new JButton("!");
 			gotItButton.setBounds(215, 77, 20, 20);
 			gotItButton.addActionListener(new TaskElementButtonPress(this));
@@ -249,7 +255,14 @@ public class TaskPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getActionCommand().equals("!")) {
-				System.out.println(te.getTask().getTitle() + " - got it!");
+				try {
+					sessionManager.getActiveGroup().getTaskManager().assignTask(te.getTask(), sessionManager.getActiveUser());	
+					te.assignedToComboBox.addItem(sessionManager.getActiveUser().getUsername());
+					System.out.println("Success");
+				} catch(Exception ex) {
+					System.out.println("Failed to assign user to task");
+				}
+				
 			} else if(e.getActionCommand().equals("A")) {
 				
 			} else if(e.getActionCommand().equals("C")) {

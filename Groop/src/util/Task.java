@@ -16,8 +16,6 @@ public class Task{
 	
 	public Task() {
 		this.assignedTo = new ArrayList<User>(0);
-
-		System.out.println(">> " + this.assignedTo.size());
 	}
 	
 	public enum TaskPriority {

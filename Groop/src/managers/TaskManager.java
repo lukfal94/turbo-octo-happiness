@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import databaseComm.ServerResponse;
 import databaseComm.ServerResponse.ServerErrorMessage;
 import social.Group;
+import social.User;
 import util.Deadline;
 import util.Task;
 
@@ -59,5 +60,21 @@ public class TaskManager{
 			return response.getServerErrorMessage();
 		}
 	}
-	
+
+	public ServerErrorMessage assignTask(Task task, User activeUser) throws JsonParseException, JsonMappingException, IOException {
+		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
+		ServerResponse response = null;
+
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=4&tid=" + task.getId() + "&uid=" + activeUser.getId());
+
+		try {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response.getServerErrorMessage();
+		} catch (Exception ex) {
+			System.out.println(ex);
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response.getServerErrorMessage();
+		}
+	}
 }
