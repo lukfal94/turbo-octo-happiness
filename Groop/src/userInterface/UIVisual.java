@@ -14,6 +14,7 @@ public class UIVisual {
 	public static Color medPriorColor = new Color(255, 153, 0);
 	public static Color highPriorColor = new Color(255, 0, 0);
 	public static Color completeTaskColor = new Color(106, 255, 106);
+	public static Color completeActivityColor = new Color(150, 0, 150);
 	
 	public static Color priorityAsColor(TaskPriority tp) {
 		switch(tp) {

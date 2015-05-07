@@ -45,10 +45,31 @@ public class GroupInfoPanel extends JPanel {
 		
 		if(sessionManager.getGuiMode() == GuiMode.STANDARD)
 			initComponents();
+		else 
+			initBlankComponents();
 		
 		this.setBackground(UIVisual.guiColor);
 	}
 	
+	private void initBlankComponents() {
+		// TODO Auto-generated method stub
+		groupName = new JLabel("<html><p style='text-align: cetner;'>"+"</p></html>");
+		groupName.setHorizontalAlignment(SwingConstants.CENTER);
+		groupName.setFont(UIVisual.titleFont);
+		
+		groupDescription = new JTextArea();
+		groupDescription.setEditable(false);
+		groupDescription.setLineWrap(true);
+		groupDescription.setWrapStyleWord(true);
+		groupDescription.setBackground(UIVisual.guiColor);
+		
+		groupName.setBounds(125, 10, 250, 30);
+		groupDescription.setBounds(50, 45, 400, 150);
+		
+		this.add(groupName);
+		this.add(groupDescription);
+	}
+
 	private void initComponents() {
 		groupName = new JLabel("<html><p style='text-align: cetner;'>"+sessionManager.getActiveGroup().getName()+"</p></html>");
 		groupName.setHorizontalAlignment(SwingConstants.CENTER);
@@ -87,7 +108,7 @@ public class GroupInfoPanel extends JPanel {
 		public GroupInfoWindow(GroupWindowMode mode) {
 			this.mode = mode;
 			
-			this.setSize(500, 400);
+			this.setSize(400, 400);
 			
 			// Center the frame in the screen
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -108,7 +129,7 @@ public class GroupInfoPanel extends JPanel {
 			
 			gbC.fill = GridBagConstraints.BOTH;
 			
-			windowPanel.setLayout(new GridLayout());
+			windowPanel.setLayout(null);
 			
 			nameLabel = new JLabel("Name");
 			descriptionLabel= new JLabel("Description");
@@ -120,6 +141,12 @@ public class GroupInfoPanel extends JPanel {
 			
 			createButton = new JButton("Create");
 			createButton.addActionListener(new CreateButtonPress());
+			
+			nameLabel.setBounds(15, 15, 100, 20);
+			nameTextField.setBounds(120, 15, 200, 20);
+			descriptionLabel.setBounds(15, 40, 100, 20);
+			descriptionTextArea.setBounds(120, 65, 200, 150);
+			createButton.setBounds(160, 275, 80, 30);
 			
 			windowPanel.add(nameLabel);
 			windowPanel.add(nameTextField);
@@ -159,6 +186,7 @@ public class GroupInfoPanel extends JPanel {
 					sessionManager.getGroupManager().addGroup((Group) response);
 					sessionManager.switchGroup((Group) response);
 					sessionManager.refreshSession();
+					sessionManager.getMainGUI().refreshInterface();
 					GroupInfoWindow.this.dispose();
 				}
 				

@@ -77,4 +77,21 @@ public class TaskManager{
 			return response.getServerErrorMessage();
 		}
 	}
+
+	public ServerErrorMessage completeTask(Task task) throws JsonParseException, JsonMappingException, IOException {
+		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
+		ServerResponse response = null;
+
+		URL jsonUrl = new URL("http://www.lukefallon.com/groop/api/tasks.php?mode=5&tid=" + task.getId());
+
+		try {
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response.getServerErrorMessage();
+		} catch (Exception ex) {
+			System.out.println(ex);
+			response = mapper.readValue(jsonUrl, ServerResponse.class);
+			return response.getServerErrorMessage();
+		}
+	}
 }
