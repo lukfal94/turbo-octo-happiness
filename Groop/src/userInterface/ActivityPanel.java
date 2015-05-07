@@ -404,6 +404,7 @@ public class ActivityPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 //				sm = ActivityPanel.this.sessionManager;
 //				Object response = null;
 //				if (taskComboBox.getSelectedIndex() == -1)
@@ -452,6 +453,62 @@ public class ActivityPanel extends JPanel{
 //					}
 //				}
 				ActivityWindow.this.dispose();
+//=======
+//				sm = ActivityPanel.this.sessionManager;
+//				Object response = null;
+//				if (taskComboBox.getSelectedIndex() == -1)
+//					JOptionPane.showMessageDialog(null, "Please select a task.", "Task Not Selected", JOptionPane.INFORMATION_MESSAGE);
+//					
+//				else if (descriptionTextArea.getText().equals("")) {
+//					JOptionPane.showMessageDialog(null, "Please give a description.", "No Description", JOptionPane.INFORMATION_MESSAGE);
+//				}
+//				
+//				else if ((int) timeSpentSpinner.getValue() < 1) {
+//					JOptionPane.showMessageDialog(null, "Please give an amount of time.", "No Time Spent", JOptionPane.INFORMATION_MESSAGE);
+//				}
+//				
+//				else {
+//
+//					// Send the new activity to the DB.
+//					try {
+//						if (currMode == ActivityWindowMode.NEW_ACTIVITY)
+//							response = registrar.addNewActivity();
+//						// else
+//							// TODO: add editActivity function to registrar
+//							// response = registrar.editActivity();
+//					} catch(Exception ex) {
+//						System.out.println(ex);
+//					}
+//					
+//					if(response.getClass().equals(ServerResponse.class)) {
+//						ServerResponse servResponse = (ServerResponse)response;
+//						// TODO Error handling
+//					} else if(response.getClass().equals(Activity.class)) {
+//						
+//						// activity was created
+//						if (currMode == ActivityWindowMode.NEW_ACTIVITY) {
+//							Activity newActivity = (Activity) response;
+//							newActivity.setTimeStamp(new Date());
+//							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+//							sm.getActiveGroup().getActivityManager().addActivity(newActivity);
+//							listModel.addElement(newActivity.getTask().getTitle() + "\n" + newActivity.getUser().getUsername() + " - " + dateFormat.format(newActivity.getTimeStamp()));
+//					
+//						}
+//						
+//						// activity was edited
+//						else {
+//							Activity editActivity = (Activity) response;
+//							editActivity.setTimeStamp(new Date());
+//							DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+//							sm.getActiveGroup().getActivityManager().getActivityLog().set(activityInd, editActivity);
+//							listModel.set(activityInd, editActivity.getTask().getTitle() + "\n" + editActivity.getUser().getUsername() + " - " + dateFormat.format(editActivity.getTimeStamp()));
+//						}
+//					}
+//				}
+//				
+//				// close window upon submitting
+//				close();
+//>>>>>>> origin/dev
 			}
 		}
 		
